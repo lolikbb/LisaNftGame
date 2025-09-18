@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LISA - NFT Gifts Game</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -17,6 +18,9 @@
             --danger: #FF3333;
             --black-bg: #000000;
             --card-bg: rgba(40, 40, 40, 0.8);
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
         }
         
         * {
@@ -138,8 +142,13 @@
         }
         
         .btn-black {
-            background: var(--black-bg);
-            border: 1px solid #333;
+            background: linear-gradient(45deg, #2c2c2c, #000000);
+            border: 1px solid #444;
+            color: var(--gold);
+        }
+        
+        .btn-black:hover {
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
         }
         
         .btn-small {
@@ -188,7 +197,6 @@
             font-size: 20px;
         }
         
-        /* Стили для главного экрана */
         .stats {
             display: flex;
             justify-content: space-around;
@@ -215,50 +223,6 @@
             color: #aaa;
         }
         
-        /* Профессиональный дизайн для обмена */
-        .exchange {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 15px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 127, 0, 0.2);
-        }
-        
-        .currency {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
-        
-        .currency-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .currency-label {
-            font-size: 14px;
-            color: #aaa;
-            margin-top: 5px;
-        }
-        
-        .exchange-btn {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border: none;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 15px;
-            min-width: 120px;
-        }
-        
-        /* Стили для заданий */
         .tasks-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -301,7 +265,6 @@
             width: 0%;
         }
         
-        /* Стили для инвентаря */
         .inventory-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -339,6 +302,7 @@
         
         .nft-info {
             padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
         }
         
         .nft-name {
@@ -373,7 +337,6 @@
             background: var(--primary);
         }
         
-        /* Стили для рулетки */
         .roulette-types {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -402,11 +365,12 @@
         }
         
         .roulette-type.black i {
-            color: white;
+            color: var(--gold);
         }
         
         .roulette-type.black {
-            background: linear-gradient(135deg, #000000, #333333);
+            background: linear-gradient(135deg, #1a1a1a, #000000);
+            border: 1px solid #333;
         }
         
         .roulette-container {
@@ -425,6 +389,7 @@
             font-weight: 700;
             color: var(--primary);
             margin: 10px 0;
+            font-family: monospace;
         }
         
         .chance-buttons {
@@ -446,6 +411,55 @@
         
         .chance-btn.active {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .roulette-wheel {
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 127, 0, 0.3);
+        }
+        
+        .roulette-items {
+            display: flex;
+            position: absolute;
+            height: 100%;
+            transition: transform 0.1s linear;
+        }
+        
+        .roulette-item {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .roulette-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .roulette-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 120px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            z-index: 10;
         }
         
         .live-wins {
@@ -476,6 +490,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
         }
         
         .win-gif {
@@ -484,17 +499,28 @@
             object-fit: cover;
         }
         
-        /* Черная рулетка */
         .black-roulette {
-            background: var(--black-bg);
-            border: 1px solid #333;
+            background: linear-gradient(135deg, #0a0a0a, #000000);
+            border: 2px solid #333;
+            border-radius: 16px;
+            padding: 20px;
         }
         
         .black-roulette .section-title {
-            color: white;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
-        /* Таблица лидеров */
+        .black-roulette .roulette-wheel {
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .black-roulette .roulette-center {
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+        }
+        
         .leaderboard-list {
             display: flex;
             flex-direction: column;
@@ -523,11 +549,15 @@
         
         .leader-info {
             flex: 1;
+            min-width: 0;
         }
         
         .leader-name {
             font-weight: 600;
             margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .leader-stars {
@@ -548,7 +578,6 @@
             object-fit: cover;
         }
         
-        /* Магазин */
         .shop-items {
             display: flex;
             flex-direction: column;
@@ -564,17 +593,6 @@
             border-radius: 12px;
         }
         
-        .shop-item-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        
         .shop-item-info {
             flex: 1;
         }
@@ -582,6 +600,9 @@
         .shop-item-title {
             font-weight: 600;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .shop-item-desc {
@@ -595,7 +616,6 @@
             font-weight: 600;
         }
         
-        /* История */
         .history-filters {
             display: flex;
             gap: 10px;
@@ -610,6 +630,7 @@
             border-radius: 20px;
             font-size: 14px;
             white-space: nowrap;
+            cursor: pointer;
         }
         
         .history-filter.active {
@@ -666,7 +687,6 @@
             white-space: nowrap;
         }
         
-        /* Профиль */
         .profile-header {
             display: flex;
             align-items: center;
@@ -737,7 +757,6 @@
             color: #aaa;
         }
         
-        /* Анимации */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -748,7 +767,6 @@
             animation: pulse 2s infinite;
         }
         
-        /* Уведомления */
         .notification {
             position: fixed;
             top: 20px;
@@ -765,7 +783,6 @@
             border: 1px solid rgba(255, 127, 0, 0.3);
         }
         
-        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -818,7 +835,39 @@
             font-weight: 600;
         }
         
-        /* Адаптивность */
+        .lottie-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .task-progress-info {
+            font-size: 12px;
+            color: #aaa;
+            margin: 5px 0;
+        }
+        
+        .task-cooldown {
+            font-size: 11px;
+            color: #ff6b6b;
+            margin-top: 5px;
+        }
+        
+        .placeholder-gif {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500, #ffd700, #00b894, #74b9ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+        }
+        
         @media (max-width: 480px) {
             .inventory-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -832,14 +881,12 @@
                 grid-template-columns: 1fr;
             }
             
-            .exchange {
-                flex-direction: column;
-                gap: 15px;
+            .roulette-types {
+                grid-template-columns: 1fr;
             }
             
-            .exchange-btn {
-                margin: 10px 0;
-                width: 100%;
+            .chance-buttons {
+                flex-direction: column;
             }
             
             .bottom-nav {
@@ -850,17 +897,45 @@
             .nav-item {
                 min-width: 60px;
             }
+            
+            .roulette-item {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .roulette-wheel {
+                height: 100px;
+            }
+
+            .topup-option {
+                display: flex;
+                justify-content: space-between;
+                padding: 12px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .topup-option:hover {
+                background: rgba(255, 127, 0, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .topup-option.selected {
+                background: linear-gradient(90deg, var(--primary), var(--secondary));
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
         }
     </style>
 </head>
 <body>
     <div class="notification" id="notification">Задание выполнено!</div>
     
-    <!-- Модальное окно выигрыша -->
     <div class="modal" id="win-modal">
         <div class="modal-content">
             <div class="modal-gif">
-                <img src="https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" class="nft-gif">
+                <div id="win-animation" class="lottie-container"></div>
             </div>
             <div class="modal-title">Поздравляем!</div>
             <div class="modal-text">Вы выиграли: <span id="win-name">NFT Gift</span> стоимостью <span id="win-value">0</span> Stars</div>
@@ -868,11 +943,10 @@
         </div>
     </div>
     
-    <!-- Модальное окно продажи NFT -->
     <div class="modal" id="sell-modal">
         <div class="modal-content">
             <div class="modal-gif">
-                <img src="https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" id="sell-nft-gif" class="nft-gif">
+                <div id="sell-animation" class="lottie-container"></div>
             </div>
             <div class="modal-title">Продать NFT</div>
             <div class="modal-text">Вы уверены, что хотите продать <span id="sell-nft-name">NFT Gift</span> за <span id="sell-nft-value">0</span> Stars?</div>
@@ -882,19 +956,18 @@
         </div>
     </div>
     
-    <!-- Модальное окно рефералов -->
     <div class="modal" id="referral-modal">
         <div class="modal-content">
             <div class="modal-title">Реферальная программа</div>
             
             <div class="referral-stats">
                 <div class="referral-stat">
-                    <div class="referral-stat-value">⭐ 150</div>
+                    <div class="referral-stat-value" id="referral-available">⭐ 0</div>
                     <div class="referral-stat-label">Доступно</div>
                 </div>
                 
                 <div class="referral-stat">
-                    <div class="referral-stat-value">⭐ 350</div>
+                    <div class="referral-stat-value" id="referral-locked">⭐ 0</div>
                     <div class="referral-stat-label">Заблокировано</div>
                 </div>
             </div>
@@ -916,6 +989,60 @@
             </button>
         </div>
     </div>
+
+
+    <div class="modal" id="topup-modal">
+        <div class="modal-content">
+            <div class="modal-title">Пополнить Stars</div>
+        
+            <div class="topup-options" style="display: grid; gap: 10px; margin: 15px 0;">
+                <div class="topup-option" onclick="selectTopupOption(250, 423.99)">
+                    <span>250 Stars</span>
+                    <span>423,99 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(350, 589)">
+                    <span>350 Stars</span>
+                    <span>589,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(500, 829)">
+                    <span>500 Stars</span>
+                    <span>829,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(750, 1239)">
+                    <span>750 Stars</span>
+                    <span>1 239,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(1000, 1649)">
+                    <span>1000 Stars</span>
+                    <span>1 649,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(1500, 2469)">
+                    <span>1500 Stars</span>
+                    <span>2 469,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(2500, 4099)">
+                    <span>2500 Stars</span>
+                    <span>4 099,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(5000, 8199)">
+                    <span>5000 Stars</span>
+                    <span>8 199,00 ₽</span>
+                </div>
+                <div class="topup-option" onclick="selectTopupOption(10000, 16399)">
+                    <span>10000 Stars</span>
+                    <span>16 399,00 ₽</span>
+                </div>
+            </div>
+            
+            <div id="selected-option" style="margin: 15px 0; padding: 10px; background: rgba(255,127,0,0.1); border-radius: 8px; display: none;">
+                <div>Выбрано: <span id="selected-stars">0</span> Stars</div>
+                <div>Стоимость: <span id="selected-price">0</span> ₽</div>
+            </div>
+            
+            <button class="btn" id="pay-btn" onclick="processPayment()" disabled>ОПЛАТИТЬ</button>
+            <button class="btn btn-secondary" onclick="closeModal()" style="margin-top: 10px;">ОТМЕНА</button>
+        </div>
+    </div>
     
     <div class="container">
         <div class="header">
@@ -923,13 +1050,12 @@
                 <div class="logo-img">🦊</div>
                 <span>LISA</span>
             </div>
-            <div class="profile">
+            <div class="profile" onclick="showTopupModal()" style="cursor: pointer;">
                 <i class="fas fa-star" style="color: gold;"></i>
                 <div class="points" id="points">0</div>
-            </div>
+            </div>   
         </div>
         
-        <!-- Главная вкладка -->
         <div class="tab-content active" id="main-tab">
             <div class="section">
                 <div class="section-title">
@@ -947,19 +1073,6 @@
                     <div class="stat-item">
                         <div class="stat-value" id="stars">0</div>
                         <div class="stat-label">STARS</div>
-                    </div>
-                </div>
-                
-                <!-- Профессиональный блок обмена -->
-                <div class="exchange">
-                    <div class="currency">
-                        <div class="currency-value" id="exchange-lisa">0</div>
-                        <div class="currency-label">LISA</div>
-                    </div>
-                    <button class="exchange-btn" onclick="exchangeLisa()">ОБМЕНЯТЬ</button>
-                    <div class="currency">
-                        <div class="currency-value" id="exchange-stars">0</div>
-                        <div class="currency-label">STARS</div>
                     </div>
                 </div>
             </div>
@@ -986,12 +1099,11 @@
                     <span>></span>
                 </div>
                 <div id="leaders-container" style="text-align: center; padding: 20px; color: #aaa;">
-                    Топ игроков появится здесь
+                    Загрузка лидеров...
                 </div>
             </div>
         </div>
         
-        <!-- Вкладка заданий -->
         <div class="tab-content" id="tasks-tab">
             <div class="section">
                 <div class="section-title">
@@ -999,7 +1111,6 @@
                 </div>
                 
                 <div class="tasks-grid" id="daily-tasks-container">
-                    <!-- Задания будут добавлены динамически -->
                 </div>
             </div>
             
@@ -1009,12 +1120,10 @@
                 </div>
                 
                 <div class="tasks-grid" id="quests-container">
-                    <!-- Квесты будут добавлены динамически -->
                 </div>
             </div>
         </div>
         
-        <!-- Вкладка инвентаря -->
         <div class="tab-content" id="inventory-tab">
             <div class="section">
                 <div class="section-title">
@@ -1023,12 +1132,10 @@
                 </div>
                 
                 <div class="inventory-grid" id="inventory-container">
-                    <!-- NFT будут добавлены динамически -->
                 </div>
             </div>
         </div>
         
-        <!-- Вкладка рулетки -->
         <div class="tab-content" id="roulette-tab">
             <div class="section">
                 <div class="section-title">
@@ -1042,7 +1149,7 @@
                     </div>
                     
                     <div class="roulette-type black" onclick="selectRouletteType('black')">
-                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-crown"></i>
                         <div>Черная рулетка</div>
                     </div>
                 </div>
@@ -1052,6 +1159,11 @@
                         <div>БЕСПЛАТНОЕ ВРАЩЕНИЕ ЧЕРЕЗ:</div>
                         <div class="spin-timer" id="countdown">23:43:24</div>
                         <button class="btn" id="free-spin-btn" onclick="spinFreeRoulette()" disabled>КРУТИТЬ БЕСПЛАТНО</button>
+                    </div>
+                    
+                    <div class="roulette-wheel">
+                        <div class="roulette-items" id="regular-roulette-items"></div>
+                        <div class="roulette-center"></div>
                     </div>
                     
                     <div class="chance-buttons">
@@ -1068,21 +1180,25 @@
                         </div>
                         
                         <div class="wins-container" id="live-wins-container">
-                            <!-- Выигрыши будут добавлены динамически -->
                         </div>
                     </div>
                 </div>
                 
                 <div class="roulette-container black-roulette" id="black-roulette" style="display: none;">
                     <div class="section-title">
-                        <span>ЧЕРНАя РУЛЕТКА</span>
-                        <span>ТОЛЬКО ЧЕРНЫЕ ФОНЫ</span>
+                        <span>ЧЕРНАЯ РУЛЕТКА</span>
+                        <span>ЭКСКЛЮЗИВНЫЕ ПОДАРКИ</span>
                     </div>
                     
-                    <p style="margin-bottom: 15px; text-align: center;">Эксклюзивные NFT подарки с черным фоном</p>
+                    <p style="margin-bottom: 15px; text-align: center; color: #aaa;">Эксклюзивные NFT подарки с черным фоном и повышенной стоимостью</p>
+                    
+                    <div class="roulette-wheel">
+                        <div class="roulette-items" id="black-roulette-items"></div>
+                        <div class="roulette-center"></div>
+                    </div>
                     
                     <button class="btn btn-black" id="black-spin-btn" onclick="spinBlackRoulette()">
-                        КРУТИТЬ ЗА 10,000 stars
+                        <i class="fas fa-crown"></i> КРУТИТЬ ЗА 10,000 stars
                     </button>
                     
                     <div class="live-wins">
@@ -1091,7 +1207,6 @@
                         </div>
                         
                         <div class="wins-container" id="black-live-wins-container">
-                            <!-- Выигрыши будут добавлены динамически -->
                         </div>
                     </div>
                 </div>
@@ -1103,38 +1218,22 @@
                 </div>
                 
                 <div class="leaderboard-list" id="roulette-leaders-container">
-                    <!-- Лидеры будут добавлены динамически -->
                 </div>
             </div>
         </div>
         
-        <!-- Вкладка магазина -->
         <div class="tab-content" id="shop-tab">
             <div class="section">
                 <div class="section-title">
                     <span>МАГАЗИН</span>
-                    <span>Прокачки и обмен</span>
-                </div>
-                
-                <div class="exchange">
-                    <div class="currency">
-                        <div class="currency-value" id="shop-lisa-value">0</div>
-                        <div class="currency-label">LISA</div>
-                    </div>
-                    <button class="exchange-btn" onclick="exchangeLisa()">ОБМЕНЯТЬ</button>
-                    <div class="currency">
-                        <div class="currency-value" id="shop-stars-value">0</div>
-                        <div class="currency-label">STARS</div>
-                    </div>
+                    <span>Прокачки</span>
                 </div>
                 
                 <div class="shop-items" id="shop-items-container">
-                    <!-- Товары будут добавлены динамически -->
                 </div>
             </div>
         </div>
-        
-        <!-- Вкладка истории -->
+
         <div class="tab-content" id="history-tab">
             <div class="section">
                 <div class="section-title">
@@ -1156,7 +1255,6 @@
             </div>
         </div>
         
-        <!-- Вкладка профиля -->
         <div class="tab-content" id="profile-tab">
             <div class="section">
                 <div class="profile-header">
@@ -1164,64 +1262,76 @@
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="profile-info">
-                        <div class="profile-name" id="profile-username">Username</div>
-                        <div class="profile-balance">⭐ <span id="profile-stars">0</span> • <span id="profile-lisa">0</span> LISA</div>
+                        <div class="profile-name" id="profile-name">Username</div>
+                        <div class="profile-balance">⭐ <span id="profile-balance">0</span> Stars</div>
                     </div>
                 </div>
                 
-                <button class="btn" onclick="openReferralModal()">
-                    <i class="fas fa-user-friends"></i> Реферальная программа
-                </button>
-                
                 <div class="referral-section">
                     <div class="section-title">
-                        <span>РЕФЕРАЛЫ</span>
+                        <span>РЕФЕРАЛЬНАЯ ПРОГРАММА</span>
                     </div>
                     
                     <div class="referral-stats">
                         <div class="referral-stat">
-                            <div class="referral-stat-value">5</div>
+                            <div class="referral-stat-value" id="referral-count">0</div>
                             <div class="referral-stat-label">Приглашено</div>
                         </div>
                         
                         <div class="referral-stat">
-                            <div class="referral-stat-value">⭐ 150</div>
+                            <div class="referral-stat-value" id="referral-earned">⭐ 0</div>
                             <div class="referral-stat-label">Заработано</div>
                         </div>
                     </div>
+                    
+                    <button class="btn" onclick="showReferralModal()">
+                        <i class="fas fa-user-plus"></i> Пригласить друзей
+                    </button>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">
+                    <span>НАСТРОЙКИ</span>
+                </div>
+                
+                <div class="tasks-grid">
+                    <button class="btn btn-secondary" onclick="showNotification('Функция в разработке')">
+                        <i class="fas fa-language"></i> Сменить язык
+                    </button>
                 </div>
             </div>
         </div>
-        
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('main-tab')">
-                <div class="nav-icon"><i class="fas fa-home"></i></div>
-                <div>Главная</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('tasks-tab')">
-                <div class="nav-icon"><i class="fas fa-tasks"></i></div>
-                <div>Задания</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('inventory-tab')">
-                <div class="nav-icon"><i class="fas fa-box-open"></i></div>
-                <div>Инвентарь</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('roulette-tab')">
-                <div class="nav-icon"><i class="fas fa-dice"></i></div>
-                <div>Рулетка</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('shop-tab')">
-                <div class="nav-icon"><i class="fas fa-store"></i></div>
-                <div>Магазин</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('history-tab')">
+    </div>
+    
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('main-tab')">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div>Главная</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tasks-tab')">
+            <div class="nav-icon"><i class="fas fa-tasks"></i></div>
+            <div>Задания</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('inventory-tab')">
+            <div class="nav-icon"><i class="fas fa-box-open"></i></div>
+            <div>Инвентарь</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('roulette-tab')">
+            <div class="nav-icon"><i class="fas fa-gift"></i></div>
+            <div>Рулетка</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('shop-tab')">
+            <div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div>Магазин</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('history-tab')">
                 <div class="nav-icon"><i class="fas fa-history"></i></div>
                 <div>История</div>
             </div>
-            <div class="nav-item" onclick="switchTab('profile-tab')">
-                <div class="nav-icon"><i class="fas fa-user"></i></div>
-                <div>Профиль</div>
-            </div>
+        <div class="nav-item" onclick="switchTab('profile-tab')">
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+            <div>Профиль</div>
         </div>
     </div>
 
@@ -1231,251 +1341,634 @@
         tg.expand();
         tg.enableClosingConfirmation();
         
-        // Данные пользователя
-        let userData = {
-            points: 0,           // Очки (копятся автоматически)
-            lisa: 0,            // LISA (копятся автоматически)
-            stars: 0,           // Stars (НЕ копятся автоматически)
-            boosts: 1,          // Множитель по умолчанию
-            lastUpdate: Date.now(),
-            selectedChance: 1,
-            selectedRoulette: null,
-            completedTasks: {},
+        // Инициализация пользователя
+        let user = {
+            id: tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 1000000),
+            username: tg.initDataUnsafe?.user?.username || 'user' + Math.floor(Math.random() * 10000),
+            points: 0,
+            stars: 0,
+            lisa: 0,
+            totalPoints: 0,
             inventory: [],
             history: [],
-            lastFreeSpin: 0,
-            lastTaskUpdate: Date.now(),
+            upgrades: {
+                speed: 1
+            },
             referralCount: 0,
-            referralEarnings: 0
+            referralEarned: 0,
+            referralAvailable: 0,
+            referralLocked: 0,
+            tasks: {},
+            lastFreeSpin: 0,
+            lastDailyBonus: 0
         };
         
-        // Текущий NFT для продажи
-        let currentSellNft = null;
+        // РЕАЛЬНЫЕ NFT подарки с Fragment URI
+        const nftGifts = [
+            { 
+                id: 1, 
+                name: "Hex Pot", 
+                value: 500, 
+                lottie: "https://nft.fragment.com/gift/hexpot-10348.lottie.json",
+                image: "https://nft.fragment.com/gift/hexpot-10348.json",
+                rarity: "epic", 
+                type: "regular" 
+            },
+            { 
+                id: 2, 
+                name: "Astral Shard", 
+                value: 800, 
+                lottie: "https://nft.fragment.com/gift/astralshard-1966.lottie.json",
+                image: "https://nft.fragment.com/gift/astralshard-1966.json",
+                rarity: "legendary", 
+                type: "regular" 
+            },
+            { 
+                id: 3, 
+                name: "B-Day Candle", 
+                value: 300, 
+                lottie: "https://nft.fragment.com/gift/bdaycandle-145867.lottie.json",
+                image: "https://nft.fragment.com/gift/bdaycandle-145867.json",
+                rarity: "rare", 
+                type: "regular" 
+            },
+            { 
+                id: 4, 
+                name: "Berry Box", 
+                value: 200, 
+                lottie: "https://nft.fragment.com/gift/berrybox-94.lottie.json",
+                image: "https://nft.fragment.com/gift/berrybox-94.json",
+                rarity: "common", 
+                type: "regular" 
+            }
+        ];
         
-        // Данные игры
-        const gameData = {
-            regularRewards: [
-                { id: 1, name: "Golden Star", value: 5000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 2, name: "Diamond Heart", value: 3000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 3, name: "Cosmic Fox", value: 25000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 4, name: "Rainbow Unicorn", value: 12500, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 5, name: "Space Rocket", value: 8000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 6, name: "Magic Crystal", value: 15000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" }
-            ],
-            blackRewards: [
-                { id: 101, name: "Black Diamond", value: 50000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 102, name: "Dark Knight", value: 45000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 103, name: "Shadow Wolf", value: 35000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 104, name: "Midnight Star", value: 40000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 105, name: "Obsidian Dragon", value: 60000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" },
-                { id: 106, name: "Phantom Cat", value: 55000, gif: "https://media.tenor.com/8tLf6G3u6E0AAAAC/telegram-star.gif" }
-            ],
-            tasks: [
-                { id: "daily", title: "Ежедневный бонус", reward: 100, type: "daily", cooldown: 86400000 },
-                { id: "share", title: "Поделиться историей", reward: 500, type: "daily", cooldown: 86400000 },
-                { id: "friends", title: "Пригласить друзей", reward: 1000, type: "quest" },
-                { id: "channel", title: "Подписка на канал", reward: 750, type: "quest" },
-                { id: "spin1", title: "Сделать 1 вращение", reward: 200, type: "quest" },
-                { id: "spin5", title: "Сделать 5 вращений", reward: 1000, type: "quest" },
-                { id: "exchange", title: "Обменять LISA", reward: 300, type: "quest" },
-                { id: "sell1", title: "Продать 1 NFT", reward: 500, type: "quest" }
-            ],
-            shopItems: [
-                { id: 1, name: "Ускорение x2", desc: "Удваивает скорость накопления LISA", price: 200, boost: 2 },
-                { id: 2, name: "Ускорение x3", desc: "Утраивает скорость накопления LISA", price: 500, boost: 3 },
-                { id: 3, name: "Ускорение x5", desc: "Пятерит скорость накопления LISA", price: 1000, boost: 5 },
-                { id: 4, name: "Ускорение x10", desc: "Десятерит скорость накопления LISA", price: 3000, boost: 10 }
-            ],
-            leaders: [
-                { id: 1, name: "Алексей", stars: 125800, nft: 1 },
-                { id: 2, name: "Мария", stars: 98500, nft: 2 },
-                { id: 3, name: "Дмитрий", stars: 87200, nft: 3 },
-                { id: 4, name: "Ольга", stars: 75400, nft: 4 },
-                { id: 5, name: "Иван", stars: 68300, nft: 5 }
-            ],
-            liveWins: []
-        };
+        // Черные NFT подарки (эксклюзивные)
+        const blackNftGifts = [
+            { 
+                id: 101, 
+                name: "Golden Star", 
+                value: 5000, 
+                lottie: "https://nft.fragment.com/gift/goldenstar-1.lottie.json",
+                image: "https://nft.fragment.com/gift/goldenstar-1.json",
+                rarity: "legendary", 
+                type: "black" 
+            },
+            { 
+                id: 102, 
+                name: "Cosmic Orb", 
+                value: 10000, 
+                lottie: "https://nft.fragment.com/gift/cosmicorb-1.lottie.json",
+                image: "https://nft.fragment.com/gift/cosmicorb-1.json",
+                rarity: "mythical", 
+                type: "black" 
+            }
+        ];
         
-        // Загрузка данных из локального хранилища
+        // Задания
+        const dailyTasks = [
+            { id: 1, title: "Ежедневный бонус", description: "Получите ежедневную награду", reward: 100, type: "daily", maxProgress: 1 },
+            { id: 2, title: "Сыграть в рулетку", description: "Сыграйте 3 раза в рулетку", reward: 150, type: "daily", maxProgress: 3 },
+            { id: 3, title: "Пригласить друга", description: "Пригласите 1 друга", reward: 200, type: "daily", maxProgress: 1 }
+        ];
+        
+        const quests = [
+            { id: 101, title: "Новичок рулетки", description: "Сыграйте 10 раз в рулетку", reward: 500, type: "quest", maxProgress: 10 },
+            { id: 102, title: "Коллекционер", description: "Соберите 5 NFT подарков", reward: 1000, type: "quest", maxProgress: 5 },
+            { id: 103, title: "Мастер рулетки", description: "Сыграйте 50 раз в рулетку", reward: 2500, type: "quest", maxProgress: 50 },
+            { id: 104, title: "Великий коллекционер", description: "Соберите 20 NFT подарков", reward: 5000, type: "quest", maxProgress: 20 }
+        ];
+        
+        // Магазин прокачек
+        const shopItems = [
+            { id: 1, title: "Ускорение x2", description: "Увеличивает скорость получения LISA в 2 раза", price: 1000, type: "speed", multiplier: 2 },
+            { id: 2, title: "Ускорение x3", description: "Увеличивает скорость получения LISA в 3 раза", price: 2500, type: "speed", multiplier: 3 },
+            { id: 3, title: "Ускорение x5", description: "Увеличивает скорость получения LISA в 5 раза", price: 5000, type: "speed", multiplier: 5 },
+            { id: 4, title: "Ускорение x10", description: "Увеличивает скорость получения LISA в 10 раза", price: 10000, type: "speed", multiplier: 10 }
+        ];
+        
+        // Переменные для рулетки
+        let selectedChance = 1;
+        let selectedRouletteType = 'regular';
+        let isSpinning = false;
+        
+        // Загрузка данных пользователя из localStorage
         function loadUserData() {
-            const savedData = localStorage.getItem('lisaUserData');
-            if (savedData) {
-                try {
-                    const parsedData = JSON.parse(savedData);
-                    // Объединяем с текущими userData, чтобы сохранить новые поля
-                    userData = { ...userData, ...parsedData };
-                    userData.lastUpdate = Date.now();
-                } catch (e) {
-                    console.error('Error parsing saved data', e);
-                }
+            const savedUser = localStorage.getItem('lisa_user');
+            if (savedUser) {
+                const parsed = JSON.parse(savedUser);
+                user.points = parsed.points || 0;
+                user.stars = parsed.stars || 1000;
+                user.lisa = parsed.lisa || 0;
+                user.totalPoints = parsed.totalPoints || 0;
+                user.inventory = parsed.inventory || [];
+                user.history = parsed.history || [];
+                user.upgrades = parsed.upgrades || { speed: 1 };
+                user.referralCount = parsed.referralCount || 0;
+                user.referralEarned = parsed.referralEarned || 0;
+                user.referralAvailable = parsed.referralAvailable || 0;
+                user.referralLocked = parsed.referralLocked || 0;
+                user.tasks = parsed.tasks || {};
+                user.lastFreeSpin = parsed.lastFreeSpin || 0;
+                user.lastDailyBonus = parsed.lastDailyBonus || 0;
             }
-            updateAllDisplays();
-            renderInventory();
-            renderHistory();
-            renderTasks();
-            renderShopItems();
-            renderLeaders();
-            updateLiveWins();
+            updateUI();
         }
         
-        // Сохранение данных в локальное хранилище
+        // Сохранение данных пользователя в localStorage
         function saveUserData() {
-            localStorage.setItem('lisaUserData', JSON.stringify(userData));
+            localStorage.setItem('lisa_user', JSON.stringify(user));
         }
         
-        // Функция для обновления очков (1 очко в секунду с учетом бустов)
-        function updatePoints() {
-            const now = Date.now();
-            const secondsPassed = Math.floor((now - userData.lastUpdate) / 1000);
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            initRoulettes();
+            updateTasks();
+            updateShop();
+            updateCountdown();
             
-            if (secondsPassed > 0) {
-                userData.points += secondsPassed * userData.boosts;
-                userData.lisa += secondsPassed * userData.boosts;
-                userData.lastUpdate = now;
-                
-                // Обновляем отображение
-                updateAllDisplays();
-                saveUserData();
-            }
+            // Обновляем счетчик каждую секунду
+            setInterval(updateCountdown, 1000);
             
-            // Проверяем появление новых заданий каждые 30 минут
-            if (now - userData.lastTaskUpdate > 1800000) { // 30 минут в миллисекундах
-                userData.lastTaskUpdate = now;
-                resetDailyTasks();
-            }
-        }
+            // Автоматическое получение LISA
+            setInterval(autoCollectLisa, 1000);
+        });
         
-        // Сброс ежедневных заданий
-        function resetDailyTasks() {
-            for (const taskId in userData.completedTasks) {
-                if (gameData.tasks.find(t => t.id === taskId && t.type === "daily")) {
-                    delete userData.completedTasks[taskId];
-                }
-            }
-            renderTasks();
+        // Функция автоматического сбора LISA
+        function autoCollectLisa() {
+            const lisaToAdd = 1 * user.upgrades.speed;
+            user.lisa += lisaToAdd;
+            user.totalPoints += lisaToAdd;
+            updateUI();
             saveUserData();
         }
         
-        // Обновление всех отображаемых значений
-        function updateAllDisplays() {
-            // Обновляем верхний бар
-            document.getElementById('points').textContent = userData.stars.toLocaleString();
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('points').textContent = user.stars.toLocaleString();
+            document.getElementById('total-points').textContent = user.totalPoints.toLocaleString();
+            document.getElementById('lisa-value').textContent = user.lisa.toLocaleString();
+            document.getElementById('stars').textContent = user.stars.toLocaleString();
+            document.getElementById('profile-name').textContent = user.username;
+            document.getElementById('profile-balance').textContent = user.stars.toLocaleString();
+            document.getElementById('referral-count').textContent = user.referralCount;
+            document.getElementById('referral-earned').textContent = '⭐ ' + user.referralEarned.toLocaleString();
+            document.getElementById('referral-available').textContent = '⭐ ' + user.referralAvailable.toLocaleString();
+            document.getElementById('referral-locked').textContent = '⭐ ' + user.referralLocked.toLocaleString();
             
-            // Обновляем главный экран
-            document.getElementById('total-points').textContent = userData.points.toLocaleString();
-            document.getElementById('lisa-value').textContent = userData.lisa.toLocaleString();
-            document.getElementById('stars').textContent = userData.stars.toLocaleString();
-            
-            // Обновляем блок обмена
-            document.getElementById('exchange-lisa').textContent = userData.lisa.toLocaleString();
-            document.getElementById('exchange-stars').textContent = userData.stars.toLocaleString();
-            
-            // Обновляем магазин
-            document.getElementById('shop-lisa-value').textContent = userData.lisa.toLocaleString();
-            document.getElementById('shop-stars-value').textContent = userData.stars.toLocaleString();
-            
-            // Обновляем профиль
-            document.getElementById('profile-stars').textContent = userData.stars.toLocaleString();
-            document.getElementById('profile-lisa').textContent = userData.lisa.toLocaleString();
+            updateInventory();
         }
         
-        // Рендер инвентаря
-        function renderInventory() {
-            const container = document.getElementById('inventory-container');
+        // Переключение вкладок
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Находим соответствующий элемент навигации и активируем его
+            const navItems = document.querySelectorAll('.nav-item');
+            for (let i = 0; i < navItems.length; i++) {
+                if (navItems[i].getAttribute('onclick').includes(tabId)) {
+                    navItems[i].classList.add('active');
+                    break;
+                }
+            }
+            
+            // Особые действия для некоторых вкладок
+            if (tabId === 'roulette-tab') {
+                selectRouletteType(selectedRouletteType);
+            } else if (tabId === 'history-tab') {
+                renderHistory('all'); // Рендерим историю при открытии вкладки
+            }
+        }
+        
+        // Инициализация рулеток
+        function initRoulettes() {
+            initRoulette('regular-roulette-items', nftGifts);
+            initRoulette('black-roulette-items', blackNftGifts);
+            selectRouletteType('regular');
+        }
+        
+        // Инициализация конкретной рулетки
+        function initRoulette(containerId, items) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            // Создаем достаточно элементов для плавной анимации
+            const totalItems = 20;
+            
+            for (let i = 0; i < totalItems; i++) {
+                const item = items[i % items.length]; // Циклическое повторение элементов
+                const div = document.createElement('div');
+                div.className = 'roulette-item';
+                div.setAttribute('data-nft-id', item.id);
+                
+                // Создаем контейнер для Lottie анимации
+                const animationContainer = document.createElement('div');
+                animationContainer.className = 'lottie-container';
+                animationContainer.id = `roulette-item-${containerId}-${i}`;
+                animationContainer.style.width = '100%';
+                animationContainer.style.height = '100%';
+                
+                div.appendChild(animationContainer);
+                container.appendChild(div);
+                
+                // Загружаем Lottie анимацию
+                setTimeout(() => {
+                    loadLottieAnimation(`roulette-item-${containerId}-${i}`, item.lottie);
+                }, 100);
+            }
+        }
+        
+
+        function addHistoryEntry(type, title, reward) {
+            user.history.unshift({
+                type: type,
+                title: title,
+                reward: reward,
+                timestamp: new Date()
+            });
+            
+            // Сохраняем только последние 100 записей
+            if (user.history.length > 100) {
+                user.history = user.history.slice(0, 100);
+            }
+            
+            saveUserData();
+            
+            // Обновляем отображение истории, если открыта соответствующая вкладка
+            if (document.getElementById('history-tab').classList.contains('active')) {
+                renderHistory('all');
+            }
+        }
+
+        // Загрузка Lottie анимации
+        function loadLottieAnimation(containerId, animationUrl) {
+            const container = document.getElementById(containerId);
             if (!container) return;
             
-            if (userData.inventory.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #aaa;">Ваш инвентарь пуст</div>';
+            container.innerHTML = '';
+            
+            lottie.loadAnimation({
+                container: container,
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationUrl
+            });
+        }
+        
+        // Выбор типа рулетки
+        function selectRouletteType(type) {
+            selectedRouletteType = type;
+            
+            document.getElementById('regular-roulette').style.display = 'none';
+            document.getElementById('black-roulette').style.display = 'none';
+            
+            if (type === 'regular') {
+                document.getElementById('regular-roulette').style.display = 'block';
+            } else if (type === 'black') {
+                document.getElementById('black-roulette').style.display = 'block';
+            }
+        }
+        
+        // Выбор множителя шанса
+        function selectChance(multiplier) {
+            selectedChance = multiplier;
+            
+            document.querySelectorAll('.chance-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.chance-btn').forEach(btn => {
+                if (btn.textContent.includes(multiplier + 'x')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            const cost = multiplier === 1 ? 200 : multiplier === 10 ? 1500 : 15000;
+            document.getElementById('spin-btn').textContent = `КРУТИТЬ ЗА ${cost} stars`;
+        }
+        
+        // Вращение обычной рулетки
+        function spinRoulette() {
+            if (isSpinning) return;
+            
+            const cost = selectedChance === 1 ? 200 : selectedChance === 10 ? 1500 : 15000;
+            
+            if (user.stars < cost) {
+                showNotification('Недостаточно Stars!');
                 return;
             }
             
-            container.innerHTML = userData.inventory.map((nft, index) => `
-                <div class="nft-item">
-                    <div class="nft-image">
-                        <img src="${nft.gif}" class="nft-gif">
-                    </div>
-                    <div class="nft-info">
-                        <div class="nft-name">${nft.name}</div>
-                        <div class="nft-value">⭐ ${nft.value.toLocaleString()}</div>
-                        <div class="nft-actions">
-                            <button class="nft-action-btn" onclick="openSellModal(${index})">Продать</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            user.stars -= cost;
+            isSpinning = true;
+            saveUserData();
+            updateUI();
+            
+            // Получаем случайный приз
+            const prizes = [];
+            for (let i = 0; i < selectedChance; i++) {
+                const prize = getRandomPrize(nftGifts);
+                prizes.push(prize);
+            }
+            
+            // Находим лучший приз
+            const bestPrize = prizes.reduce((best, current) => {
+                return current.value > best.value ? current : best;
+            }, prizes[0]);
+            
+            // Запускаем анимацию вращения
+            startRouletteAnimation('regular-roulette-items', bestPrize);
+            addHistoryEntry('win', `Выигрыш в рулетке: ${prize.name}`, { stars: prize.value });
         }
         
-        // Открытие модального окна продажи NFT
-        function openSellModal(index) {
-            currentSellNft = userData.inventory[index];
+        // Бесплатное вращение рулетки
+        function spinFreeRoulette() {
+            if (isSpinning) return;
             
-            document.getElementById('sell-nft-name').textContent = currentSellNft.name;
-            document.getElementById('sell-nft-value').textContent = currentSellNft.value.toLocaleString();
-            document.getElementById('sell-nft-gif').src = currentSellNft.gif;
+            const now = Date.now();
+            const timeSinceLastSpin = now - user.lastFreeSpin;
+            
+            if (timeSinceLastSpin < 24 * 60 * 60 * 1000) {
+                showNotification('Бесплатное вращение будет доступно через ' + formatTime(24 * 60 * 60 * 1000 - timeSinceLastSpin));
+                return;
+            }
+            
+            isSpinning = true;
+            user.lastFreeSpin = now;
+            saveUserData();
+            
+            // Получаем случайный приз
+            const prize = getRandomPrize(nftGifts);
+            
+            // Запускаем анимацию вращения
+            startRouletteAnimation('regular-roulette-items', prize);
+            addHistoryEntry('win', `Бесплатный выигрыш: ${prize.name}`, { stars: prize.value });
+        }
+        
+        // Вращение черной рулетки
+        function spinBlackRoulette() {
+            if (isSpinning) return;
+            
+            const cost = 10000;
+            
+            if (user.stars < cost) {
+                showNotification('Недостаточно Stars!');
+                return;
+            }
+            
+            user.stars -= cost;
+            isSpinning = true;
+            saveUserData();
+            updateUI();
+            
+            // Получаем случайный приз
+            const prize = getRandomPrize(blackNftGifts);
+            
+            // Запускаем анимацию вращения
+            startRouletteAnimation('black-roulette-items', prize);
+            addHistoryEntry('win', `Выигрыш в черной рулетке: ${prize.name}`, { stars: prize.value });
+        }
+        
+        // Запуск анимации вращения рулетки
+        function startRouletteAnimation(containerId, prize) {
+            const container = document.getElementById(containerId);
+            const items = container.querySelectorAll('.roulette-item');
+            
+            // Находим индекс приза
+            let prizeIndex = -1;
+            for (let i = 0; i < items.length; i++) {
+                if (parseInt(items[i].getAttribute('data-nft-id')) === prize.id) {
+                    prizeIndex = i;
+                    break;
+                }
+            }
+            
+            // Если приз не найден, выбираем случайный
+            if (prizeIndex === -1) {
+                prizeIndex = Math.floor(Math.random() * items.length);
+            }
+            
+            // Вычисляем позицию для остановки
+            const itemWidth = 100 + 20; // width + margin
+            const stopPosition = -(prizeIndex * itemWidth);
+            
+            // Начальная позиция
+            let currentPosition = 0;
+            let startTime = null;
+            let animationDuration = 3000; // 3 секунды
+            let initialSpeed = 30; // начальная скорость
+            let decelerationStart = animationDuration * 0.7; // начинаем замедляться после 70% времени
+            
+            // Функция анимации
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                
+                if (elapsed < animationDuration) {
+                    // Вычисляем прогресс анимации (0-1)
+                    let progress = elapsed / animationDuration;
+                    
+                    // Вычисляем текущую скорость
+                    let speed;
+                    if (elapsed < decelerationStart) {
+                        // Фаза ускорения/постоянной скорости
+                        speed = initialSpeed;
+                    } else {
+                        // Фаза замедления
+                        let decelerationProgress = (elapsed - decelerationStart) / (animationDuration - decelerationStart);
+                        speed = initialSpeed * (1 - decelerationProgress);
+                    }
+                    
+                    // Обновляем позицию
+                    currentPosition -= speed;
+                    container.style.transform = `translateX(${currentPosition}px)`;
+                    
+                    // Продолжаем анимацию
+                    requestAnimationFrame(animate);
+                } else {
+                    // Завершаем анимацию точно на призе
+                    container.style.transform = `translateX(${stopPosition}px)`;
+                    
+                    // Завершаем вращение
+                    setTimeout(() => {
+                        isSpinning = false;
+                        addToInventory(prize);
+                        showWinModal(prize);
+                        addLiveWin(prize);
+                        updateTasksProgress('roulette', 1);
+                        saveUserData();
+                    }, 500);
+                }
+            }
+            
+            // Запускаем анимацию
+            requestAnimationFrame(animate);
+        }
+        
+        // Получение случайного приза с учетом вероятности
+        function getRandomPrize(items) {
+            // Создаем взвешенный массив на основе редкости
+            let weightedItems = [];
+            
+            items.forEach(item => {
+                let weight = 1;
+                
+                if (item.rarity === 'common') weight = 40;
+                else if (item.rarity === 'rare') weight = 25;
+                else if (item.rarity === 'epic') weight = 15;
+                else if (item.rarity === 'legendary') weight = 10;
+                else if (item.rarity === 'mythical') weight = 5;
+                
+                for (let i = 0; i < weight; i++) {
+                    weightedItems.push(item);
+                }
+            });
+            
+            // Выбираем случайный элемент из взвешенного массива
+            const randomIndex = Math.floor(Math.random() * weightedItems.length);
+            return {...weightedItems[randomIndex]}; // возвращаем копию объекта
+        }
+        
+        // Добавление выигрыша в инвентарь
+        function addToInventory(item) {
+            user.inventory.push({
+                id: Date.now(), // уникальный ID
+                nftId: item.id,
+                name: item.name,
+                value: item.value,
+                lottie: item.lottie,
+                image: item.image,
+                rarity: item.rarity,
+                type: item.type,
+                obtained: new Date().toISOString()
+            });
+            
+            updateInventory();
+        }
+        
+        // Обновление отображения инвентаря
+        function updateInventory() {
+            const container = document.getElementById('inventory-container');
+            container.innerHTML = '';
+            
+            if (user.inventory.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #aaa;">Ваш инвентарь пуст</div>';
+                return;
+            }
+            
+            user.inventory.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'nft-item';
+                
+                // Контейнер для изображения
+                const img = document.createElement('div');
+                img.className = 'nft-image';
+                
+                // Контейнер для Lottie анимации
+                const animationContainer = document.createElement('div');
+                animationContainer.className = 'lottie-container';
+                animationContainer.id = `inventory-item-${index}`;
+                animationContainer.style.width = '100%';
+                animationContainer.style.height = '100%';
+                
+                img.appendChild(animationContainer);
+                
+                // Информация о NFT
+                const info = document.createElement('div');
+                info.className = 'nft-info';
+                
+                const name = document.createElement('div');
+                name.className = 'nft-name';
+                name.textContent = item.name;
+                
+                const value = document.createElement('div');
+                value.className = 'nft-value';
+                value.textContent = '⭐ ' + item.value.toLocaleString();
+                
+                const actions = document.createElement('div');
+                actions.className = 'nft-actions';
+                
+                const sellBtn = document.createElement('button');
+                sellBtn.className = 'nft-action-btn sell';
+                sellBtn.textContent = 'Продать';
+                sellBtn.onclick = () => showSellModal(item);
+                
+                actions.appendChild(sellBtn);
+                
+                info.appendChild(name);
+                info.appendChild(value);
+                info.appendChild(actions);
+                
+                div.appendChild(img);
+                div.appendChild(info);
+                
+                container.appendChild(div);
+                
+                // Загружаем Lottie анимацию
+                setTimeout(() => {
+                    loadLottieAnimation(`inventory-item-${index}`, item.lottie);
+                }, 100);
+            });
+        }
+        
+        // Показ модального окна продажи
+        function showSellModal(item) {
+            document.getElementById('sell-nft-name').textContent = item.name;
+            document.getElementById('sell-nft-value').textContent = item.value.toLocaleString();
+            
+            // Загружаем анимацию в модальное окно
+            const container = document.getElementById('sell-animation');
+            container.innerHTML = '';
+            loadLottieAnimation('sell-animation', item.lottie);
             
             document.getElementById('sell-modal').style.display = 'flex';
         }
         
-        // Подтверждение продажи NFT
+        // Подтверждение продажи
         function confirmSell() {
-            if (!currentSellNft) return;
+            const modal = document.getElementById('sell-modal');
+            const nftName = document.getElementById('sell-nft-name').textContent;
             
-            // Находим индекс NFT в инвентаре
-            const index = userData.inventory.findIndex(nft => 
-                nft.id === currentSellNft.id && 
-                nft.name === currentSellNft.name
-            );
+            // Находим NFT в инвентаре
+            const nftIndex = user.inventory.findIndex(item => item.name === nftName);
             
-            if (index === -1) {
-                showNotification('NFT не найден в инвентаре!');
-                return;
+            if (nftIndex !== -1) {
+                const nft = user.inventory[nftIndex];
+                user.stars += nft.value;
+                user.inventory.splice(nftIndex, 1);
+                
+                updateUI();
+                saveUserData();
+                showNotification('NFT продан за ' + nft.value + ' Stars!');
+                
+                // Обновляем прогресс заданий
+                updateTasksProgress('sell', 1);
             }
             
-            // Удаляем NFT из инвентаря
-            userData.inventory.splice(index, 1);
-            
-            // Добавляем Stars за продажу
-            userData.stars += currentSellNft.value;
-            
-            // Добавляем запись в историю
-            userData.history.unshift({
-                type: 'sell',
-                title: 'Продажа NFT: ' + currentSellNft.name,
-                reward: { stars: currentSellNft.value },
-                timestamp: new Date()
-            });
-            
-            // Проверяем задание на продажу
-            if (!userData.completedTasks['sell1']) {
-                completeTask('sell1');
-            }
-            
-            showNotification(`NFT продан за ${currentSellNft.value.toLocaleString()} Stars!`);
-            
-            // Обновляем отображение
-            updateAllDisplays();
-            renderInventory();
-            renderHistory();
-            saveUserData();
-            
-            // Закрываем модальное окно
-            closeModal();
-            currentSellNft = null;
+            modal.style.display = 'none';
+            addHistoryEntry('sell', `Продажа NFT: ${nft.name}`, { stars: nft.value });
         }
         
-        // Рендер истории
         function renderHistory(filter = 'all') {
             const container = document.getElementById('history-list');
             if (!container) return;
             
-            if (userData.history.length === 0) {
+            if (user.history.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: #aaa;">История операций пуста</div>';
                 return;
             }
             
-            let filteredHistory = userData.history;
+            let filteredHistory = user.history;
             if (filter !== 'all') {
-                filteredHistory = userData.history.filter(item => item.type === filter);
+                filteredHistory = user.history.filter(item => item.type === filter);
             }
             
             if (filteredHistory.length === 0) {
@@ -1485,10 +1978,65 @@
             
             container.innerHTML = filteredHistory.map(item => {
                 let icon = 'fa-star';
-                if (item.type === 'exchange') icon = 'fa-exchange-alt';
-                if (item.type === 'task') icon = 'fa-gift';
-                if (item.type === 'boost') icon = 'fa-bolt';
-                if (item.type === 'sell') icon = 'fa-coins';
+                let rewardText = '';
+                
+                // Определяем иконку и текст награды в зависимости от типа операции
+                switch (item.type) {
+                    case 'task':
+                        icon = 'fa-gift';
+                        if (typeof item.reward === 'object' && item.reward.points) {
+                            rewardText = `+${item.reward.points} очков`;
+                        } else if (typeof item.reward === 'object' && item.reward.stars) {
+                            rewardText = `+⭐ ${item.reward.stars.toLocaleString()}`;
+                        } else if (typeof item.reward === 'number') {
+                            rewardText = `+${item.reward} очков`;
+                        }
+                        break;
+                    case 'boost':
+                        icon = 'fa-bolt';
+                        rewardText = `Ускорение`;
+                        break;
+                    case 'sell':
+                        icon = 'fa-coins';
+                        if (typeof item.reward === 'object' && item.reward.stars) {
+                            rewardText = `+⭐ ${item.reward.stars.toLocaleString()}`;
+                        } else if (typeof item.reward === 'number') {
+                            rewardText = `+⭐ ${item.reward.toLocaleString()}`;
+                        }
+                        break;
+                    case 'win':
+                        icon = 'fa-trophy';
+                        if (typeof item.reward === 'object' && item.reward.stars) {
+                            rewardText = `+⭐ ${item.reward.stars.toLocaleString()}`;
+                        } else if (typeof item.reward === 'number') {
+                            rewardText = `+⭐ ${item.reward.toLocaleString()}`;
+                        }
+                        break;
+                    case 'roulette':
+                        icon = 'fa-gift';
+                        rewardText = `Выигрыш`;
+                        break;
+                    case 'purchase':
+                        icon = 'fa-shopping-cart';
+                        rewardText = `Покупка`;
+                        break;
+                    case 'deposit':
+                        icon = 'fa-plus-circle';
+                        if (typeof item.reward === 'object' && item.reward.stars) {
+                            rewardText = `+⭐ ${item.reward.stars.toLocaleString()}`;
+                        } else if (typeof item.reward === 'number') {
+                            rewardText = `+⭐ ${item.reward.toLocaleString()}`;
+                        }
+                        break;
+                    case 'withdraw':
+                        icon = 'fa-minus-circle';
+                        if (typeof item.reward === 'object' && item.reward.stars) {
+                            rewardText = `-⭐ ${item.reward.stars.toLocaleString()}`;
+                        } else if (typeof item.reward === 'number') {
+                            rewardText = `-⭐ ${item.reward.toLocaleString()}`;
+                        }
+                        break;
+                }
                 
                 const date = new Date(item.timestamp);
                 const formattedDate = formatDate(date);
@@ -1502,12 +2050,12 @@
                         <div class="history-title">${item.title}</div>
                         <div class="history-date">${formattedDate}</div>
                     </div>
-                    <div class="history-amount">${item.type === 'win' || item.type === 'exchange' || item.type === 'sell' ? '+' : ''}${item.reward.stars ? '⭐ ' + item.reward.stars.toLocaleString() : item.reward.points ? item.reward.points + ' очков' : 'Ускорение x' + item.reward.boost}</div>
+                    <div class="history-amount">${rewardText}</div>
                 </div>
                 `;
             }).join('');
         }
-        
+
         // Форматирование даты
         function formatDate(date) {
             const now = new Date();
@@ -1567,8 +2115,7 @@
                 `;
             }).join('');
         }
-        
-        // Рендер товаров в магазине
+
         function renderShopItems() {
             const container = document.getElementById('shop-items-container');
             if (!container) return;
@@ -1583,387 +2130,385 @@
                         <div class="shop-item-desc">${item.desc}</div>
                         <div class="shop-item-price">⭐ ${item.price}</div>
                     </div>
-                    <button class="btn btn-small" onclick="buyBoost(${item.boost}, ${item.price})" ${userData.stars < item.price ? 'disabled' : ''}>
+                    <button class="btn btn-small" onclick="buyBoost(${item.boost}, ${item.price})" ${userData.stars < item.price || userData.boosts >= item.boost ? 'disabled' : ''}>
                         ${userData.boosts >= item.boost ? 'Куплено' : 'Купить'}
                     </button>
                 </div>
             `).join('');
         }
-        
-        // Рендер таблицы лидеров
-        function renderLeaders() {
-            const container = document.getElementById('leaders-container');
-            const rouletteContainer = document.getElementById('roulette-leaders-container');
+
+
+        // Показ модального окна выигрыша
+        function showWinModal(prize) {
+            document.getElementById('win-name').textContent = prize.name;
+            document.getElementById('win-value').textContent = prize.value.toLocaleString();
             
-            if (!container && !rouletteContainer) return;
+            // Загружаем анимацию в модальное окно
+            const container = document.getElementById('win-animation');
+            container.innerHTML = '';
+            loadLottieAnimation('win-animation', prize.lottie);
             
-            // Обновляем общий рейтинг пользователей
-            gameData.leaders.sort((a, b) => b.stars - a.stars);
-            
-            const leadersHTML = gameData.leaders.map((leader, index) => {
-                const nft = gameData.regularRewards.find(r => r.id === leader.nft) || gameData.regularRewards[0];
-                return `
-                <div class="leader-item">
-                    <div class="leader-avatar">${index + 1}</div>
-                    <div class="leader-info">
-                        <div class="leader-name">${leader.name}</div>
-                        <div class="leader-stars">⭐ ${leader.stars.toLocaleString()}</div>
-                    </div>
-                    <div class="leader-nft">
-                        <img src="${nft.gif}" class="leader-nft-gif">
-                    </div>
-                </div>
-                `;
-            }).join('');
-            
-            if (container) container.innerHTML = leadersHTML;
-            if (rouletteContainer) rouletteContainer.innerHTML = leadersHTML;
+            document.getElementById('win-modal').style.display = 'flex';
         }
         
-        // Обновление списка live-выигрышей
-        function updateLiveWins() {
-            const regularContainer = document.getElementById('live-wins-container');
-            const blackContainer = document.getElementById('black-live-wins-container');
+        // Закрытие модального окна
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            resetTopupSelection();
+        }
+        
+        // Добавление выигрыша в список live-выигрышей
+        function addLiveWin(prize) {
+            const containerId = selectedRouletteType === 'regular' ? 'live-wins-container' : 'black-live-wins-container';
+            const container = document.getElementById(containerId);
             
-            if (!regularContainer && !blackContainer) return;
+            const winItem = document.createElement('div');
+            winItem.className = 'win-item';
             
-            // Оставляем только последние 10 выигрышей
-            if (gameData.liveWins.length > 10) {
-                gameData.liveWins = gameData.liveWins.slice(-10);
+            const img = document.createElement('div');
+            img.className = 'win-image';
+            
+            const animationContainer = document.createElement('div');
+            animationContainer.className = 'lottie-container';
+            animationContainer.id = `live-win-${Date.now()}`;
+            animationContainer.style.width = '100%';
+            animationContainer.style.height = '100%';
+            
+            img.appendChild(animationContainer);
+            
+            const name = document.createElement('div');
+            name.textContent = prize.name;
+            name.style.fontSize = '12px';
+            name.style.marginBottom = '5px';
+            
+            const value = document.createElement('div');
+            value.textContent = '⭐ ' + prize.value.toLocaleString();
+            value.style.fontSize = '12px';
+            value.style.color = 'var(--primary)';
+            value.style.fontWeight = 'bold';
+            
+            winItem.appendChild(img);
+            winItem.appendChild(name);
+            winItem.appendChild(value);
+            
+            container.prepend(winItem);
+            
+            // Загружаем Lottie анимацию
+            setTimeout(() => {
+                loadLottieAnimation(`live-win-${Date.now()}`, prize.lottie);
+            }, 100);
+            
+            // Ограничиваем количество элементов
+            if (container.children.length > 10) {
+                container.removeChild(container.lastChild);
             }
-            
-            const winsHTML = gameData.liveWins.map(win => `
-                <div class="win-item">
-                    <div class="win-image">
-                        <img src="${win.gif}" class="win-gif">
-                    </div>
-                    <div>${win.name}</div>
-                </div>
-            `).join('');
-            
-            if (regularContainer) regularContainer.innerHTML = winsHTML;
-            if (blackContainer) blackContainer.innerHTML = winsHTML;
         }
         
-        // Добавление выигрыша в live-ленту
-        function addLiveWin(win) {
-            gameData.liveWins.push(win);
-            updateLiveWins();
+        // Обновление заданий
+        function updateTasks() {
+            updateDailyTasks();
+            updateQuests();
+        }
+        
+        // Обновление ежедневных заданий
+        function updateDailyTasks() {
+            const container = document.getElementById('daily-tasks-container');
+            container.innerHTML = '';
+            
+            dailyTasks.forEach(task => {
+                const progress = user.tasks[task.id] || 0;
+                const completed = progress >= task.maxProgress;
+                
+                const div = document.createElement('div');
+                div.className = 'task-item';
+                
+                const title = document.createElement('div');
+                title.className = 'task-title';
+                title.textContent = task.title;
+                
+                const desc = document.createElement('div');
+                desc.className = 'task-reward';
+                desc.textContent = `+${task.reward} очков`;
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'task-progress';
+                
+                const progressBarInner = document.createElement('div');
+                progressBarInner.className = 'task-progress-bar';
+                progressBarInner.style.width = `${(progress / task.maxProgress) * 100}%`;
+                
+                progressBar.appendChild(progressBarInner);
+                
+                const progressInfo = document.createElement('div');
+                progressInfo.className = 'task-progress-info';
+                progressInfo.textContent = `${progress}/${task.maxProgress}`;
+                
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = completed ? 'ВЫПОЛНЕНО' : 'ВЫПОЛНИТЬ';
+                
+                if (completed) {
+                    btn.disabled = true;
+                    btn.style.background = '#636e72';
+                } else {
+                    btn.onclick = () => completeTask(task);
+                }
+                
+                div.appendChild(title);
+                div.appendChild(desc);
+                div.appendChild(progressBar);
+                div.appendChild(progressInfo);
+                div.appendChild(btn);
+                
+                container.appendChild(div);
+            });
+        }
+        
+        // Обновление квестов
+        function updateQuests() {
+            const container = document.getElementById('quests-container');
+            container.innerHTML = '';
+            
+            quests.forEach(task => {
+                const progress = user.tasks[task.id] || 0;
+                const completed = progress >= task.maxProgress;
+                
+                const div = document.createElement('div');
+                div.className = 'task-item';
+                
+                const title = document.createElement('div');
+                title.className = 'task-title';
+                title.textContent = task.title;
+                
+                const desc = document.createElement('div');
+                desc.className = 'task-reward';
+                desc.textContent = `+${task.reward} Stars`;
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'task-progress';
+                
+                const progressBarInner = document.createElement('div');
+                progressBarInner.className = 'task-progress-bar';
+                progressBarInner.style.width = `${(progress / task.maxProgress) * 100}%`;
+                
+                progressBar.appendChild(progressBarInner);
+                
+                const progressInfo = document.createElement('div');
+                progressInfo.className = 'task-progress-info';
+                progressInfo.textContent = `${progress}/${task.maxProgress}`;
+                
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = completed ? 'ЗАБРАТЬ НАГРАДУ' : 'ВЫПОЛНЯЕТСЯ';
+                
+                if (completed) {
+                    btn.onclick = () => completeTask(task);
+                } else {
+                    btn.disabled = true;
+                }
+                
+                div.appendChild(title);
+                div.appendChild(desc);
+                div.appendChild(progressBar);
+                div.appendChild(progressInfo);
+                div.appendChild(btn);
+                
+                container.appendChild(div);
+            });
         }
         
         // Выполнение задания
-        function completeTask(taskId) {
-            const task = gameData.tasks.find(t => t.id === taskId);
-            if (!task) return;
-            
-            if (userData.completedTasks[taskId]) {
-                showNotification('Это задание уже выполнено!');
-                return;
-            }
-            
-            // Проверка времени для ежедневных заданий
+        function completeTask(task) {
             if (task.type === 'daily') {
-                const lastCompletion = userData.completedTasks[`${taskId}_time`] || 0;
-                const remainingTime = lastCompletion + task.cooldown - Date.now();
-                
-                if (remainingTime > 0) {
-                    showNotification('Задание будет доступно позже');
-                    return;
-                }
+                user.points += task.reward;
+                user.totalPoints += task.reward;
+                showNotification(`Получено ${task.reward} очков!`);
+            } else if (task.type === 'quest') {
+                user.stars += task.reward;
+                showNotification(`Получено ${task.reward} Stars!`);
             }
-            
-            // Выдача награды
-            userData.points += task.reward;
+
+            if (task.type === 'daily') {
+                addHistoryEntry('task', `Задание: ${task.title}`, { points: task.reward });
+            } else if (task.type === 'quest') {
+                addHistoryEntry('task', `Квест: ${task.title}`, { stars: task.reward });
+            }
             
             // Отмечаем задание как выполненное
-            userData.completedTasks[taskId] = true;
-            userData.completedTasks[`${taskId}_time`] = Date.now();
+            user.tasks[task.id] = task.maxProgress;
             
-            // Добавляем запись в историю
-            userData.history.unshift({
-                type: 'task',
-                title: task.title,
-                reward: { points: task.reward },
-                timestamp: new Date()
-            });
-            
-            // Показываем уведомление
-            showNotification('Задание выполнено! +' + task.reward + ' очков');
-            
-            // Обновляем отображение и сохраняем данные
-            updateAllDisplays();
-            renderTasks();
-            renderHistory();
+            updateUI();
+            updateTasks();
             saveUserData();
         }
         
-        // Выбор типа рулетки
-        function selectRouletteType(type) {
-            userData.selectedRoulette = type;
+        // Обновление прогресса заданий
+        function updateTasksProgress(type, amount) {
+            let updated = false;
             
-            // Скрываем все рулетки
-            document.getElementById('regular-roulette').style.display = 'none';
-            document.getElementById('black-roulette').style.display = 'none';
+            // Обновляем ежедневные задания
+            dailyTasks.forEach(task => {
+                if ((type === 'roulette' && task.title.includes('рулетку')) ||
+                    (type === 'invite' && task.title.includes('друга')) ||
+                    (type === 'sell' && task.title.includes('NFT'))) {
+                    
+                    const currentProgress = user.tasks[task.id] || 0;
+                    if (currentProgress < task.maxProgress) {
+                        user.tasks[task.id] = Math.min(currentProgress + amount, task.maxProgress);
+                        updated = true;
+                    }
+                }
+            });
             
-            // Показываем выбранную
-            if (type === 'regular') {
-                document.getElementById('regular-roulette').style.display = 'block';
-            } else {
-                document.getElementById('black-roulette').style.display = 'block';
+            // Обновляем квесты
+            quests.forEach(task => {
+                if ((type === 'roulette' && task.title.includes('рулетку')) ||
+                    (type === 'collect' && task.title.includes('коллекционер'))) {
+                    
+                    const currentProgress = user.tasks[task.id] || 0;
+                    if (currentProgress < task.maxProgress) {
+                        user.tasks[task.id] = Math.min(currentProgress + amount, task.maxProgress);
+                        updated = true;
+                    }
+                }
+            });
+            
+            if (updated) {
+                updateTasks();
+                saveUserData();
             }
         }
         
-        // Выбор шанса в рулетке
-        function selectChance(multiplier) {
-            userData.selectedChance = multiplier;
+        // Обновление магазина
+        function updateShop() {
+            const container = document.getElementById('shop-items-container');
+            container.innerHTML = '';
             
-            // Обновляем кнопки
-            document.querySelectorAll('.chance-btn').forEach(btn => {
-                btn.classList.remove('active');
+            shopItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                
+                const icon = document.createElement('div');
+                icon.style.fontSize = '24px';
+                icon.style.color = 'var(--primary)';
+                icon.innerHTML = '<i class="fas fa-bolt"></i>';
+                
+                const info = document.createElement('div');
+                info.className = 'shop-item-info';
+                
+                const title = document.createElement('div');
+                title.className = 'shop-item-title';
+                title.textContent = item.title;
+                
+                const desc = document.createElement('div');
+                desc.className = 'shop-item-desc';
+                desc.textContent = item.description;
+                
+                const price = document.createElement('div');
+                price.className = 'shop-item-price';
+                price.textContent = '⭐ ' + item.price.toLocaleString();
+                
+                info.appendChild(title);
+                info.appendChild(desc);
+                info.appendChild(price);
+                
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-small';
+                
+                // Проверяем, куплено ли уже улучшение
+                if (user.upgrades[item.type] >= item.multiplier) {
+                    btn.textContent = 'КУПЛЕНО';
+                    btn.disabled = true;
+                    btn.style.background = '#636e72';
+                } else {
+                    btn.textContent = 'КУПИТЬ';
+                    btn.onclick = () => buyUpgrade(item);
+                }
+                
+                div.appendChild(icon);
+                div.appendChild(info);
+                div.appendChild(btn);
+                
+                container.appendChild(div);
             });
-            
-            // Активируем выбранную кнопку
-            const buttons = document.querySelectorAll('.chance-btn');
-            buttons[multiplier === 1 ? 0 : multiplier === 10 ? 1 : 2].classList.add('active');
-            
-            // Обновляем текст кнопки спина
-            const spinBtn = document.getElementById('spin-btn');
-            spinBtn.textContent = `КРУТИТЬ ЗА ${multiplier === 1 ? 200 : multiplier === 10 ? 1_500 : 15_000} stars`;
         }
         
-        // Вращение обычной рулетки
-        function spinRoulette() {
-            const cost = userData.selectedChance === 1 ? 200 : userData.selectedChance === 10 ? 1500 : 15000;
-            
-            if (userData.stars < cost) {
-                showNotification('Недостаточно Stars для вращения!');
+        // Покупка улучшения
+        function buyUpgrade(item) {
+            if (user.stars < item.price) {
+                showNotification('Недостаточно Stars!');
                 return;
             }
             
-            userData.stars -= cost;
+            user.stars -= item.price;
+            user.upgrades[item.type] = item.multiplier;
             
-            // Выбираем случайный приз
-            const rewards = gameData.regularRewards;
-            const win = rewards[Math.floor(Math.random() * rewards.length)];
-            
-            // Добавляем выигрыш в инвентарь
-            userData.inventory.push({
-                id: win.id,
-                name: win.name,
-                value: win.value,
-                gif: win.gif
-            });
-            
-            // Добавляем в live-выигрыши
-            addLiveWin(win);
-            
-            // Показываем модальное окно с выигрышем
-            showWinModal(win.name, win.value);
-            
-            // Добавляем запись в историю
-            userData.history.unshift({
-                type: 'win',
-                title: 'Выигрыш в рулетке: ' + win.name,
-                reward: { stars: win.value },
-                timestamp: new Date()
-            });
-            
-            // Обновляем задания
-            checkSpinTasks();
-            
-            updateAllDisplays();
-            renderInventory();
-            renderHistory();
+            updateUI();
+            updateShop();
             saveUserData();
+            
+            showNotification(`Улучшение "${item.title}" куплено!`);
+            addHistoryEntry('purchase', `Покупка: ${item.title}`, { boost: item.multiplier });
         }
         
-        // Бесплатное вращение рулетки
-        function spinFreeRoulette() {
+        // Обновление счетчика обратного отсчета
+        function updateCountdown() {
             const now = Date.now();
-            const timeSinceLastSpin = now - userData.lastFreeSpin;
+            const timeSinceLastSpin = now - user.lastFreeSpin;
+            const timeUntilNextSpin = 24 * 60 * 60 * 1000 - timeSinceLastSpin;
             
-            if (timeSinceLastSpin < 86400000) { // 24 часа
-                showNotification('Бесплатное вращение будет доступно позже!');
-                return;
-            }
-            
-            userData.lastFreeSpin = now;
-            
-            // Выбираем случайный приз (более низкого уровня для бесплатного вращения)
-            const freeRewards = gameData.regularRewards.filter(r => r.value <= 5000);
-            const win = freeRewards[Math.floor(Math.random() * freeRewards.length)];
-            
-            // Добавляем выигрыш в инвентарь
-            userData.inventory.push({
-                id: win.id,
-                name: win.name,
-                value: win.value,
-                gif: win.gif
-            });
-            
-            // Добавляем в live-выигрыши
-            addLiveWin(win);
-            
-            // Показываем модальное окно с выигрышем
-            showWinModal(win.name, win.value);
-            
-            // Добавляем запись в истории
-            userData.history.unshift({
-                type: 'win',
-                title: 'Бесплатный выигрыш в рулетке: ' + win.name,
-                reward: { stars: win.value },
-                timestamp: new Date()
-            });
-            
-            updateAllDisplays();
-            renderInventory();
-            renderHistory();
-            saveUserData();
-            
-            // Обновляем кнопку бесплатного вращения
-            document.getElementById('free-spin-btn').disabled = true;
-        }
-        
-        // Вращение черной рулетки
-        function spinBlackRoulette() {
-            const cost = 10000;
-            
-            if (userData.stars < cost) {
-                showNotification('Недостаточно Stars для вращения!');
-                return;
-            }
-            
-            userData.stars -= cost;
-            
-            // Выбираем случайный приз из черной рулетки
-            const rewards = gameData.blackRewards;
-            const win = rewards[Math.floor(Math.random() * rewards.length)];
-            
-            // Добавляем выигрыш в инвентарь
-            userData.inventory.push({
-                id: win.id,
-                name: win.name,
-                value: win.value,
-                gif: win.gif,
-                black: true
-            });
-            
-            // Добавляем в live-выигрыши
-            addLiveWin(win);
-            
-            // Показываем модальное окно с выигрышем
-            showWinModal(win.name, win.value);
-            
-            // Добавляем запись в истории
-            userData.history.unshift({
-                type: 'win',
-                title: 'Выигрыш в черной рулетке: ' + win.name,
-                reward: { stars: win.value },
-                timestamp: new Date()
-            });
-            
-            updateAllDisplays();
-            renderInventory();
-            renderHistory();
-            saveUserData();
-        }
-        
-        // Проверка заданий, связанных с вращениями
-        function checkSpinTasks() {
-            // Подсчитываем количество вращений
-            const spinCount = userData.history.filter(item => item.type === 'win').length;
-            
-            // Проверяем задание "Сделать 1 вращение"
-            if (spinCount >= 1 && !userData.completedTasks['spin1']) {
-                completeTask('spin1');
-            }
-            
-            // Проверяем задание "Сделать 5 вращений"
-            if (spinCount >= 5 && !userData.completedTasks['spin5']) {
-                completeTask('spin5');
+            if (timeUntilNextSpin <= 0) {
+                document.getElementById('countdown').textContent = '00:00:00';
+                document.getElementById('free-spin-btn').disabled = false;
+                document.getElementById('free-spin-btn').textContent = 'КРУТИТЬ БЕСПЛАТНО';
+            } else {
+                document.getElementById('countdown').textContent = formatTime(timeUntilNextSpin);
+                document.getElementById('free-spin-btn').disabled = true;
             }
         }
         
-        // Обмен LISA на STARS (курс 3000:1)
-        function exchangeLisa() {
-            if (userData.lisa < 3000) {
-                showNotification('Недостаточно LISA для обмена! Минимум 3,000 LISA');
-                return;
-            }
+        // Форматирование времени
+        function formatTime(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
             
-            const starsToAdd = Math.floor(userData.lisa / 3000);
-            userData.stars += starsToAdd;
-            userData.lisa = userData.lisa % 3000;
-            
-            // Добавляем запись в историю
-            userData.history.unshift({
-                type: 'exchange',
-                title: 'Обмен LISA на Stars',
-                reward: { stars: starsToAdd },
-                timestamp: new Date()
-            });
-            
-            // Проверяем задание на обмен
-            if (!userData.completedTasks['exchange']) {
-                completeTask('exchange');
-            }
-            
-            showNotification(`Обменено! Получено ${starsToAdd.toLocaleString()} Stars`);
-            
-            updateAllDisplays();
-            renderHistory();
-            saveUserData();
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
         
-        // Покупка буста
-        function buyBoost(multiplier, cost) {
-            if (userData.stars < cost) {
-                showNotification('Недостаточно Stars для покупки!');
-                return;
-            }
+        // Показ уведомления
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
             
-            if (userData.boosts >= multiplier) {
-                showNotification('У вас уже есть этот буст или лучше!');
-                return;
-            }
-            
-            userData.stars -= cost;
-            userData.boosts = multiplier;
-            
-            // Добавляем запись в историю
-            userData.history.unshift({
-                type: 'boost',
-                title: 'Покупка ускорения x' + multiplier,
-                reward: { boost: multiplier },
-                timestamp: new Date()
-            });
-            
-            showNotification(`Ускорение x${multiplier} активировано!`);
-            
-            updateAllDisplays();
-            renderShopItems();
-            renderHistory();
-            saveUserData();
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
         
-        // Открытие модального окна рефералов
-        function openReferralModal() {
+        // Показ модального окна реферальной программы
+        function showReferralModal() {
             document.getElementById('referral-modal').style.display = 'flex';
         }
         
         // Копирование реферальной ссылки
         function copyReferralLink() {
-            const referralLink = 'https://t.me/your_bot?start=ref123456';
-            navigator.clipboard.writeText(referralLink)
-                .then(() => {
-                    showNotification('Реферальная ссылка скопирована!');
-                })
-                .catch(err => {
-                    showNotification('Не удалось скопировать ссылку');
-                });
+            const referralLink = `https://t.me/your_bot?start=${user.id}`;
+            
+            // Создаем временный элемент для копирования
+            const tempInput = document.createElement('input');
+            tempInput.value = referralLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            showNotification('Реферальная ссылка скопирована!');
         }
-        
-        // Фильтрация истории
+
         function filterHistory(type) {
             // Убираем активный класс у всех фильтров
             document.querySelectorAll('.history-filter').forEach(filter => {
@@ -1976,127 +2521,69 @@
             // Рендерим отфильтрованную историю
             renderHistory(type);
         }
-        
-        // Показать модальное окно с выигрышем
-        function showWinModal(name, value) {
-            document.getElementById('win-name').textContent = name;
-            document.getElementById('win-value').textContent = value.toLocaleString();
-            document.getElementById('win-modal').style.display = 'flex';
-            
-            // Вибрация при выигрыше
-            if (typeof tg !== 'undefined' && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('heavy');
-            }
+
+        let selectedTopupAmount = 0;
+        let selectedTopupPrice = 0;
+
+        // Показать модальное окно пополнения
+        function showTopupModal() {
+            document.getElementById('topup-modal').style.display = 'flex';
+            resetTopupSelection();
         }
-        
-        // Закрыть модальное окно
-        function closeModal() {
-            document.getElementById('win-modal').style.display = 'none';
-            document.getElementById('sell-modal').style.display = 'none';
-            document.getElementById('referral-modal').style.display = 'none';
+
+        // Выбор опции пополнения
+        function selectTopupOption(amount, price) {
+            selectedTopupAmount = amount;
+            selectedTopupPrice = price;
+            
+            // Убираем выделение у всех опций
+            document.querySelectorAll('.topup-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Добавляем выделение выбранной опции
+            event.target.classList.add('selected');
+            
+            // Показываем информацию о выборе
+            document.getElementById('selected-stars').textContent = amount.toLocaleString();
+            document.getElementById('selected-price').textContent = price.toLocaleString();
+            document.getElementById('selected-option').style.display = 'block';
+            
+            // Активируем кнопку оплаты
+            document.getElementById('pay-btn').disabled = false;
         }
-        
-        // Показать уведомление
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+
+        // Сброс выбора пополнения
+        function resetTopupSelection() {
+            selectedTopupAmount = 0;
+            selectedTopupPrice = 0;
+            document.querySelectorAll('.topup-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('selected-option').style.display = 'none';
+            document.getElementById('pay-btn').disabled = true;
         }
-        
-        // Таймер для обратного отсчета до следующего бесплатного вращения
-        function updateCountdown() {
-            const now = Date.now();
-            const timeSinceLastSpin = now - userData.lastFreeSpin;
-            const timeUntilNextSpin = 86400000 - timeSinceLastSpin;
-            
-            if (timeUntilNextSpin <= 0) {
-                document.getElementById('countdown').textContent = '00:00:00';
-                document.getElementById('free-spin-btn').disabled = false;
-                return;
-            }
-            
-            const hours = Math.floor(timeUntilNextSpin / (1000 * 60 * 60));
-            const minutes = Math.floor((timeUntilNextSpin % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeUntilNextSpin % (1000 * 60)) / 1000);
-            
-            document.getElementById('countdown').textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Обработка оплаты (фейковая)
+        function processPayment() {
+            if (selectedTopupAmount > 0) {
+                // Добавляем Stars пользователю
+                user.stars += selectedTopupAmount;
                 
-            // Активируем кнопку, если таймер истек
-            const freeSpinBtn = document.getElementById('free-spin-btn');
-            if (freeSpinBtn && timeUntilNextSpin <= 0) {
-                freeSpinBtn.disabled = false;
+                // Обновляем интерфейс
+                updateUI();
+                saveUserData();
+                
+                // Показываем уведомление
+                showNotification(`Успешно пополнено ${selectedTopupAmount.toLocaleString()} Stars!`);
+                
+                // Добавляем в историю
+                addHistoryEntry('deposit', `Пополнение баланса`, { stars: selectedTopupAmount });
+                
+                // Закрываем модальное окно
+                closeModal();
             }
         }
-        
-        // Переключение между вкладками
-        function switchTab(tabId) {
-            // Скрыть все вкладки
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Показать выбранную вкладку
-            document.getElementById(tabId).classList.add('active');
-            
-            // Обновить навигацию
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Активировать соответствующую кнопку навигации
-            const navItems = document.querySelectorAll('.nav-item');
-            for (let item of navItems) {
-                if (item.textContent.includes(
-                    tabId === 'main-tab' ? 'Главная' :
-                    tabId === 'tasks-tab' ? 'Задания' :
-                    tabId === 'inventory-tab' ? 'Инвентарь' :
-                    tabId === 'roulette-tab' ? 'Рулетка' :
-                    tabId === 'shop-tab' ? 'Магазин' :
-                    tabId === 'history-tab' ? 'История' : 'Профиль'
-                )) {
-                    item.classList.add('active');
-                    break;
-                }
-            }
-            
-            // Сбрасываем выбор рулетки при переключении вкладок
-            if (tabId !== 'roulette-tab') {
-                userData.selectedRoulette = null;
-                document.getElementById('regular-roulette').style.display = 'none';
-                document.getElementById('black-roulette').style.display = 'none';
-            }
-            
-            // При переключении на вкладку истории обновляем ее
-            if (tabId === 'history-tab') {
-                renderHistory();
-            }
-            
-            // При переключении на вкладку инвентаря обновляем его
-            if (tabId === 'inventory-tab') {
-                renderInventory();
-            }
-        }
-        
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            // Загружаем данные пользователя
-            loadUserData();
-            
-            // Устанавливаем имя пользователя
-            document.getElementById('profile-username').textContent = tg.initDataUnsafe.user?.username || 'User';
-            
-            // Запускаем обновление очков каждую секунду
-            setInterval(updatePoints, 1000);
-            
-            // Запускаем обновление таймера каждую секунду
-            setInterval(updateCountdown, 1000);
-            updateCountdown();
-        });
     </script>
 </body>
 </html>
