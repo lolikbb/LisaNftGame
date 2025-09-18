@@ -1336,6 +1336,14 @@
     </div>
 
     <script>
+        function loadLottieAnimation(containerId, animationUrl) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            // Временная замена - показываем эмодзи
+            container.innerHTML = '<div style="font-size: 40px;">🎁</div>';
+        }
+
         // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
         tg.expand();
