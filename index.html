@@ -1796,7 +1796,12 @@
 
         
         
+        let liveWins = {
+            regular: [],
+            black: []
+        };
 
+        
         // Переменные для рулетки
         let selectedChance = 1;
         let selectedRouletteType = 'regular';
@@ -1843,18 +1848,13 @@
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
+            loadLiveWins(); // Добавь эту строку
             initRoulettes();
             initCases();
             updateCountdown();
-
-            // Обновляем счетчик каждую секунду
-            setInterval(updateCountdown, 1000);
             
-
-            // Запуск краш игры каждые 10 секунд
+            setInterval(updateCountdown, 1000);
             setInterval(startCrashGame, 10000);
-
-            setTimeout(setupTelegramAvatar, 100);
         });
         
         
@@ -1997,7 +1997,15 @@
             }, prizes[0]);
             
             // Запускаем анимацию вращения
-            startRouletteAnimation('regular-roulette-items', bestPrize);
+            startRouletteAnimation('regular-roulette-items', bestPrize, function() {
+                // Этот колбэк выполнится после завершения анимации
+                addToInventory(bestPrize);
+                showWinModal(bestPrize);
+                addLiveWin(bestPrize); // ПЕРЕМЕСТИЛИ СЮДА
+                updateTasksProgress('roulette', 1);
+                saveUserData();
+            });
+            
             addHistoryEntry('win', `Выигрыш в рулетке: ${bestPrize.name}`, bestPrize.value);
         }
 
@@ -2021,7 +2029,14 @@
             const prize = getRandomGift(nftGifts);
             
             // Запускаем анимацию вращения
-            startRouletteAnimation('regular-roulette-items', prize);
+            startRouletteAnimation('regular-roulette-items', prize, function() {
+                // Этот колбэк выполнится после завершения анимации
+                addToInventory(prize);
+                showWinModal(prize);
+                addLiveWin(prize); // ПЕРЕМЕСТИЛИ СЮДА
+                saveUserData();
+            });
+            
             addHistoryEntry('win', `Бесплатный выигрыш: ${prize.name}`, prize.value);
         }
 
@@ -2045,12 +2060,19 @@
             const prize = getRandomGift(blackNftGifts);
             
             // Запускаем анимацию вращения
-            startRouletteAnimation('black-roulette-items', prize);
+            startRouletteAnimation('black-roulette-items', prize, function() {
+                // Этот колбэк выполнится после завершения анимации
+                addToInventory(prize);
+                showWinModal(prize);
+                addLiveWin(prize); // ПЕРЕМЕСТИЛИ СЮДА
+                saveUserData();
+            });
+            
             addHistoryEntry('win', `Выигрыш в черной рулетке: ${prize.name}`, prize.value);
         }
 
         // Запуск анимации вращения рулетки
-        function startRouletteAnimation(containerId, prize) {
+        function startRouletteAnimation(containerId, prize, onComplete) {
             const container = document.getElementById(containerId);
             const items = container.querySelectorAll('.roulette-item');
             
@@ -2112,10 +2134,11 @@
                     // Завершаем вращение
                     setTimeout(() => {
                         isSpinning = false;
-                        addToInventory(prize);
-                        showWinModal(prize);
-                        addLiveWin(prize);
-                        saveUserData();
+                        
+                        // ВЫЗЫВАЕМ КОЛБЭК ПОСЛЕ ЗАВЕРШЕНИЯ АНИМАЦИИ
+                        if (onComplete && typeof onComplete === 'function') {
+                            onComplete();
+                        }
                     }, 500);
                 }
             }
@@ -2475,59 +2498,76 @@
         }
 
         // Показ модального окна выигрыша
-        function showWinModal(prize) {
-            document.getElementById('win-name').textContent = prize.name;
-            document.getElementById('win-value').textContent = prize.value.toLocaleString();
-            
-            // Загружаем LOTTIE АНИМАЦИЮ в модальное окно
-            const container = document.getElementById('win-animation');
-            container.innerHTML = '';
-            loadLottieAnimation('win-animation', prize.lottie);
-            
-            document.getElementById('win-modal').style.display = 'flex';
-        }
-
-        // Добавление выигрыша в список live-выигрышей
         function addLiveWin(prize) {
             const containerId = selectedRouletteType === 'regular' ? 'live-wins-container' : 'black-live-wins-container';
-            const container = document.getElementById(containerId);
+            const winsKey = selectedRouletteType === 'regular' ? 'regular' : 'black';
             
-            const winItem = document.createElement('div');
-            winItem.className = 'win-item';
+            // Добавляем выигрыш в историю
+            const winData = {
+                name: prize.name,
+                value: prize.value,
+                image: prize.image,
+                timestamp: Date.now()
+            };
             
-            const imgContainer = document.createElement('div');
-            imgContainer.className = 'win-image';
+            liveWins[winsKey].unshift(winData);
             
-            // Используем картинку
-            const img = document.createElement('img');
-            img.src = prize.image;
-            img.alt = prize.name;
-            img.className = 'win-gif';
-            
-            imgContainer.appendChild(img);
-            
-            const name = document.createElement('div');
-            name.textContent = prize.name;
-            name.style.fontSize = '12px';
-            name.style.marginBottom = '5px';
-            
-            const value = document.createElement('div');
-            value.textContent = '⭐ ' + prize.value.toLocaleString();
-            value.style.fontSize = '12px';
-            value.style.color = 'var(--primary)';
-            value.style.fontWeight = 'bold';
-            
-            winItem.appendChild(imgContainer);
-            winItem.appendChild(name);
-            winItem.appendChild(value);
-            
-            container.prepend(winItem);
-            
-            if (container.children.length > 10) {
-                container.removeChild(container.lastChild);
+            // Сохраняем только последние 10 выигрышей
+            if (liveWins[winsKey].length > 10) {
+                liveWins[winsKey] = liveWins[winsKey].slice(0, 10);
             }
+            
+            // Сохраняем в localStorage
+            saveLiveWins();
+            
+            // Обновляем отображение
+            renderLiveWins(winsKey, containerId);
         }
-        
+
+        function renderLiveWins(winsKey, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            liveWins[winsKey].forEach(win => {
+                const winItem = document.createElement('div');
+                winItem.className = 'win-item';
+                
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'win-image';
+                
+                const img = document.createElement('img');
+                img.src = win.image;
+                img.alt = win.name;
+                img.className = 'win-gif';
+                
+                imgContainer.appendChild(img);
+                
+                const name = document.createElement('div');
+                name.textContent = win.name;
+                name.style.fontSize = '12px';
+                name.style.marginBottom = '5px';
+                
+                const value = document.createElement('div');
+                value.textContent = '⭐ ' + win.value.toLocaleString();
+                value.style.fontSize = '12px';
+                value.style.color = 'var(--primary)';
+                value.style.fontWeight = 'bold';
+                
+                const time = document.createElement('div');
+                time.textContent = formatTimeAgo(win.timestamp);
+                time.style.fontSize = '10px';
+                time.style.color = '#aaa';
+                
+                winItem.appendChild(imgContainer);
+                winItem.appendChild(name);
+                winItem.appendChild(value);
+                winItem.appendChild(time);
+                
+                container.appendChild(winItem);
+            });
+        }
 
 
         // Обновление счетчика обратного отсчета
@@ -2602,13 +2642,18 @@
         }
 
         function formatTimeAgo(timestamp) {
-            const now = new Date();
-            const diff = now - new Date(timestamp);
+            const now = Date.now();
+            const diff = now - timestamp;
             const minutes = Math.floor(diff / 60000);
+            
             if (minutes < 1) return 'только что';
             if (minutes < 60) return `${minutes}м назад`;
+            
             const hours = Math.floor(minutes / 60);
-            return `${hours}ч назад`;
+            if (hours < 24) return `${hours}ч назад`;
+            
+            const days = Math.floor(hours / 24);
+            return `${days}д назад`;
         }
 
         // История операций
@@ -2804,6 +2849,27 @@
                 avatarContainer.appendChild(icon);
             }
         }
+
+        function saveLiveWins() {
+            localStorage.setItem('nora_casino_live_wins', JSON.stringify(liveWins));
+        }
+
+        // Загрузка выигрышей из localStorage
+        function loadLiveWins() {
+            const savedWins = localStorage.getItem('nora_casino_live_wins');
+            if (savedWins) {
+                try {
+                    liveWins = JSON.parse(savedWins);
+                } catch (e) {
+                    console.error('Ошибка загрузки выигрышей:', e);
+                    liveWins = { regular: [], black: [] };
+                }
+            }
+            
+            // Восстанавливаем отображение
+            renderLiveWins('regular', 'live-wins-container');
+            renderLiveWins('black', 'black-live-wins-container');
+        }
         
         // Вывод подарков
         function showWithdrawModal() {
@@ -2850,6 +2916,25 @@
             }
             
             document.getElementById('withdraw-modal').style.display = 'flex';
+        }
+
+        function showWinModal(prize) {
+            document.getElementById('win-name').textContent = prize.name;
+            document.getElementById('win-value').textContent = prize.value.toLocaleString();
+            
+            // Загружаем LOTTIE АНИМАЦИЮ в модальное окно
+            const container = document.getElementById('win-animation');
+            container.innerHTML = '';
+            loadLottieAnimation('win-animation', prize.lottie);
+            
+            document.getElementById('win-modal').style.display = 'flex';
+            
+            // Автоматическое закрытие через 5 секунд (опционально)
+            setTimeout(() => {
+                if (document.getElementById('win-modal').style.display === 'flex') {
+                    closeModal();
+                }
+            }, 5000);
         }
 
     </script>
