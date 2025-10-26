@@ -1823,6 +1823,7 @@
                 user.totalPoints = parsed.totalPoints || 0;
                 user.inventory = parsed.inventory || [];
                 user.history = parsed.history || [];
+                user.upgrades = parsed.upgrades || { speed: 1 };
                 user.referralCount = parsed.referralCount || 0;
                 user.referralEarned = parsed.referralEarned || 0;
                 user.referralAvailable = parsed.referralAvailable || 0;
@@ -1832,7 +1833,6 @@
                 user.lastDailyBonus = parsed.lastDailyBonus || 0;
             }
             updateUI();
-            updateShop();
         }
         
         // Сохранение данных пользователя в localStorage
@@ -1862,7 +1862,6 @@
         // Обновление интерфейса
         function updateUI() {
             document.getElementById('points').textContent = user.stars.toLocaleString();
-            document.getElementById('total-points').textContent = user.totalPoints.toLocaleString();
             document.getElementById('stars').textContent = user.stars.toLocaleString();
             document.getElementById('profile-name').textContent = user.username;
             document.getElementById('profile-balance').textContent = user.stars.toLocaleString();
