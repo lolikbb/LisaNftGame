@@ -1830,17 +1830,6 @@
                 user.tasks = parsed.tasks || {};
                 user.lastFreeSpin = parsed.lastFreeSpin || 0;
                 user.lastDailyBonus = parsed.lastDailyBonus || 0;
-                
-                // Сохраняем данные из Telegram, если они есть
-                if (tg.initDataUnsafe?.user) {
-                    user.photoUrl = tg.initDataUnsafe.user.photo_url || parsed.photoUrl;
-                    user.firstName = tg.initDataUnsafe.user.first_name || parsed.firstName;
-                    user.lastName = tg.initDataUnsafe.user.last_name || parsed.lastName;
-                } else {
-                    user.photoUrl = parsed.photoUrl;
-                    user.firstName = parsed.firstName;
-                    user.lastName = parsed.lastName;
-                }
             }
             updateUI();
             updateShop();
@@ -1864,6 +1853,8 @@
 
             // Запуск краш игры каждые 10 секунд
             setInterval(startCrashGame, 10000);
+
+            setTimeout(setupTelegramAvatar, 100);
         });
         
         
@@ -1873,15 +1864,12 @@
             document.getElementById('points').textContent = user.stars.toLocaleString();
             document.getElementById('total-points').textContent = user.totalPoints.toLocaleString();
             document.getElementById('stars').textContent = user.stars.toLocaleString();
-            document.getElementById('profile-name').textContent = user.firstName || user.username;
+            document.getElementById('profile-name').textContent = user.username;
             document.getElementById('profile-balance').textContent = user.stars.toLocaleString();
             document.getElementById('referral-count').textContent = user.referralCount;
             document.getElementById('referral-earned').textContent = '⭐ ' + user.referralEarned.toLocaleString();
             document.getElementById('referral-available').textContent = '⭐ ' + user.referralAvailable.toLocaleString();
             document.getElementById('referral-locked').textContent = '⭐ ' + user.referralLocked.toLocaleString();
-            
-            // Устанавливаем аватарку
-            setupProfileAvatar();
             
             updateInventory();
         }
@@ -2791,34 +2779,33 @@
             }
         }
 
-        function setupProfileAvatar() {
+        function setupTelegramAvatar() {
             const avatarContainer = document.getElementById('profile-avatar');
-            const defaultIcon = document.getElementById('default-avatar-icon');
+            if (!avatarContainer) return;
             
-            if (user.photoUrl) {
-                // Создаем элемент изображения
+            // Очищаем контейнер
+            avatarContainer.innerHTML = '';
+            
+            // Проверяем есть ли аватар в Telegram
+            if (tg.initDataUnsafe?.user?.photo_url) {
+                // Создаем изображение
                 const img = document.createElement('img');
-                img.src = user.photoUrl;
-                img.alt = `${user.firstName} ${user.lastName}`;
-                img.onload = function() {
-                    // Успешно загрузилось
-                    avatarContainer.classList.add('has-image');
-                    defaultIcon.style.display = 'none';
-                };
-                img.onerror = function() {
-                    // Если изображение не загрузилось, показываем дефолтную иконку
-                    avatarContainer.classList.remove('has-image');
-                    defaultIcon.style.display = 'flex';
-                };
-                
+                img.src = tg.initDataUnsafe.user.photo_url;
+                img.alt = tg.initDataUnsafe.user.first_name || 'User';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '50%';
                 avatarContainer.appendChild(img);
             } else {
-                // Нет аватарки в Telegram
-                avatarContainer.classList.remove('has-image');
-                defaultIcon.style.display = 'flex';
+                // Дефолтная иконка
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-user';
+                icon.style.fontSize = '36px';
+                avatarContainer.appendChild(icon);
             }
         }
-
+        
         // Вывод подарков
         function showWithdrawModal() {
             const container = document.getElementById('withdraw-inventory-container');
