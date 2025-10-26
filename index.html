@@ -9,18 +9,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #FF7F00;
-            --secondary: #FFAA33;
-            --accent: #FF5500;
-            --dark: #1A1A1A;
-            --light: #FFFFFF;
-            --success: #00B894;
-            --danger: #FF3333;
-            --black-bg: #000000;
-            --card-bg: rgba(40, 40, 40, 0.8);
-            --gold: #FFD700;
-            --silver: #C0C0C0;
-            --bronze: #CD7F32;
+            --primary: #0088CC;       /* Основной синий TON */
+            --secondary: #00A0E4;     /* Светло-синий */
+            --accent: #0066A4;        /* Темно-синий акцент */
+            --dark: #0A0A0A;          /* Черный фон */
+            --light: #FFFFFF;         /* Белый текст */
+            --success: #00C781;       /* Зеленый успех */
+            --danger: #FF3B30;        /* Красный ошибка */
+            --black-bg: #000000;      /* Черный фон */
+            --card-bg: rgba(20, 20, 20, 0.9); /* Темный карточный фон */
+            --gold: #FFD700;          /* Золотой */
+            --silver: #C0C0C0;        /* Серебряный */
+            --bronze: #CD7F32;        /* Бронзовый */
+            --ton-gradient: linear-gradient(135deg, #0088CC, #00A0E4); /* Градиент TON */
+            --ton-dark: #001F33;      /* Темный TON */
+            --ton-light: #66C2FF;     /* Светлый TON */
         }
         
         * {
@@ -31,7 +34,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark), #2A2A2A);
+            background: linear-gradient(135deg, var(--dark), #1A1A1A);
             color: var(--light);
             padding: 12px;
             padding-bottom: 80px;
@@ -48,12 +51,12 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px;
-            background: rgba(40, 40, 40, 0.8);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 127, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 136, 204, 0.2);
+            border: 1px solid rgba(0, 136, 204, 0.3);
         }
         
         .logo {
@@ -84,10 +87,11 @@
         .profile {
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
             padding: 10px 16px;
             border-radius: 20px;
             gap: 8px;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .points {
@@ -102,8 +106,8 @@
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 127, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.15);
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .section-title {
@@ -117,7 +121,7 @@
         }
         
         .btn {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--ton-gradient);
             border: none;
             color: white;
             padding: 12px 20px;
@@ -130,7 +134,7 @@
         
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 127, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
         }
         
         .btn:disabled {
@@ -142,14 +146,15 @@
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            color: var(--ton-light);
         }
         
         .btn-success {
-            background: linear-gradient(90deg, var(--success), #00D8A4);
+            background: linear-gradient(90deg, var(--success), #00E5A4);
         }
-        
+
         .btn-black {
             background: linear-gradient(45deg, #2c2c2c, #000000);
             border: 1px solid #444;
@@ -178,15 +183,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(40, 40, 40, 0.95);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
-            border-top: 1px solid rgba(255, 127, 0, 0.3);
+            border-top: 1px solid rgba(0, 136, 204, 0.3);
             z-index: 100;
         }
-        
+
         .nav-item {
             text-align: center;
             font-size: 12px;
@@ -214,11 +219,12 @@
         
         .stat-item {
             text-align: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
             padding: 10px;
             border-radius: 12px;
             flex: 1;
             margin: 0 5px;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .stat-value {
@@ -239,10 +245,11 @@
         }
         
         .task-item {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 136, 204, 0.1);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .task-title {
@@ -269,7 +276,7 @@
         
         .task-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--ton-gradient);
             border-radius: 3px;
             width: 0%;
         }
@@ -281,12 +288,13 @@
         }
         
         .nft-item {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
             border-radius: 12px;
             overflow: hidden;
             text-align: center;
             transition: transform 0.2s;
             position: relative;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .nft-item:hover {
@@ -354,17 +362,19 @@
         }
         
         .roulette-type {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
+
         
         .roulette-type:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(255, 127, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
         }
         
         .roulette-type i {
@@ -387,7 +397,7 @@
         }
         
         .free-spin {
-            background: rgba(255, 127, 0, 0.2);
+            background: rgba(0, 136, 204, 0.2);
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
@@ -419,7 +429,7 @@
         }
         
         .chance-btn.active {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--ton-gradient);
         }
         
         .roulette-wheel {
@@ -429,8 +439,8 @@
             position: relative;
             margin: 20px 0;
             border-radius: 12px;
+            border: 2px solid rgba(0, 136, 204, 0.3);
             background: rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(255, 127, 0, 0.3);
         }
         
         .roulette-items {
@@ -519,11 +529,12 @@
             color: var(--gold);
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
-        
+
         .black-roulette .roulette-wheel {
             border: 2px solid rgba(255, 215, 0, 0.3);
             background: rgba(0, 0, 0, 0.8);
         }
+
         
         .black-roulette .roulette-center {
             background: var(--gold);
@@ -538,17 +549,18 @@
         }
         
         .case-item {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(0, 136, 204, 0.2);
         }
         
         .case-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(255, 127, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
         }
         
         .case-image {
@@ -604,7 +616,7 @@
             margin: 20px 0;
             position: relative;
             height: 200px;
-            border: 2px solid rgba(255, 127, 0, 0.3);
+            border: 2px solid rgba(0, 136, 204, 0.3);
             overflow: hidden;
         }
         
@@ -683,7 +695,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: var(--ton-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -731,7 +743,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.2);
             padding: 15px;
             border-radius: 12px;
         }
@@ -791,7 +804,8 @@
             align-items: center;
             gap: 15px;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 136, 204, 0.05);
+            border: 1px solid rgba(0, 136, 204, 0.1);
             border-radius: 12px;
         }
         
@@ -799,7 +813,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(255, 127, 0, 0.2);
+            background: rgba(0, 136, 204, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -836,7 +850,8 @@
             gap: 15px;
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.2);
             border-radius: 16px;
         }
         
@@ -844,11 +859,30 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: var(--ton-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 36px;
+            overflow: hidden; /* Важно для изображения */
+            position: relative;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #default-avatar-icon {
+            z-index: 1;
+        }
+
+        .profile-avatar.has-image #default-avatar-icon {
+            display: none;
         }
         
         .profile-info {
@@ -882,7 +916,8 @@
         }
         
         .referral-stat {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.2);
             padding: 15px;
             border-radius: 12px;
             text-align: center;
@@ -915,7 +950,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(40, 40, 40, 0.95);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(10px);
             color: var(--primary);
             padding: 12px 20px;
@@ -923,7 +958,7 @@
             z-index: 1000;
             display: none;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 127, 0, 0.3);
+            border: 1px solid rgba(0, 136, 204, 0.3);
         }
         
         .modal {
@@ -941,7 +976,7 @@
         
         .modal-content {
             background: var(--card-bg);
-            border-radius: 16px;
+            border: 1px solid rgba(0, 136, 204, 0.3);
             padding: 20px;
             width: 90%;
             max-width: 400px;
@@ -1082,19 +1117,20 @@
                 display: flex;
                 justify-content: space-between;
                 padding: 12px;
-                background: rgba(0, 0, 0, 0.3);
+                background: rgba(0, 136, 204, 0.1);
+                border: 1px solid rgba(0, 136, 204, 0.2);
                 border-radius: 8px;
                 cursor: pointer;
                 transition: all 0.2s;
             }
 
             .topup-option:hover {
-                background: rgba(255, 127, 0, 0.2);
+                background: rgba(0, 136, 204, 0.2);
                 transform: translateY(-2px);
             }
 
             .topup-option.selected {
-                background: linear-gradient(90deg, var(--primary), var(--secondary));
+                background: var(--ton-gradient);
                 border: 1px solid rgba(255, 255, 255, 0.3);
             }
         }
@@ -1281,35 +1317,13 @@
                 </div>
                 <div class="stats">
                     <div class="stat-item">
-                        <div class="stat-value" id="total-points">0</div>
-                        <div class="stat-label">Всего очков</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="lisa-value">0</div>
-                        <div class="stat-label">LISA</div>
-                    </div>
-                    <div class="stat-item">
                         <div class="stat-value" id="stars">0</div>
                         <div class="stat-label">STARS</div>
                     </div>
                 </div>
             </div>
             
-            <div class="section">
-                <div class="section-title">
-                    <span>БЫСТРЫЕ ДЕЙСТВИЯ</span>
-                </div>
-                
-                <div class="tasks-grid">
-                    <div class="task-item">
-                        <div class="task-title">Ежедневный бонус</div>
-                        <div class="task-reward">+100 очков</div>
-                        <button class="btn" onclick="switchTab('tasks-tab')">
-                            ПОЛУЧИТЬ
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
             
             <div class="section">
                 <div class="section-title">
@@ -1322,25 +1336,6 @@
             </div>
         </div>
         
-        <div class="tab-content" id="tasks-tab">
-            <div class="section">
-                <div class="section-title">
-                    <span>ЕЖЕДНЕВНЫЕ ЗАДАНИЯ</span>
-                </div>
-                
-                <div class="tasks-grid" id="daily-tasks-container">
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="section-title">
-                    <span>КВЕСТЫ</span>
-                </div>
-                
-                <div class="tasks-grid" id="quests-container">
-                </div>
-            </div>
-        </div>
         
         <div class="tab-content" id="inventory-tab">
             <div class="section">
@@ -1494,18 +1489,6 @@
                 </div>
             </div>
         </div>
-        
-        <div class="tab-content" id="shop-tab">
-            <div class="section">
-                <div class="section-title">
-                    <span>МАГАЗИН</span>
-                    <span>Прокачки</span>
-                </div>
-                
-                <div class="shop-items" id="shop-items-container">
-                </div>
-            </div>
-        </div>
 
         <div class="tab-content" id="history-tab">
             <div class="section">
@@ -1518,7 +1501,6 @@
                     <div class="history-filter" onclick="filterHistory('deposit')">Пополнения</div>
                     <div class="history-filter" onclick="filterHistory('withdraw')">Выводы</div>
                     <div class="history-filter" onclick="filterHistory('win')">Выигрыши</div>
-                    <div class="history-filter" onclick="filterHistory('task')">Задания</div>
                     <div class="history-filter" onclick="filterHistory('sell')">Продажи</div>
                 </div>
                 
@@ -1531,8 +1513,9 @@
         <div class="tab-content" id="profile-tab">
             <div class="section">
                 <div class="profile-header">
-                    <div class="profile-avatar">
-                        <i class="fas fa-user"></i>
+                    <div class="profile-avatar" id="profile-avatar">
+                        <!-- Аватар будет загружен через JavaScript -->
+                        <i class="fas fa-user" id="default-avatar-icon"></i>
                     </div>
                     <div class="profile-info">
                         <div class="profile-name" id="profile-name">Username</div>
@@ -1594,10 +1577,6 @@
             <div class="nav-icon"><i class="fas fa-home"></i></div>
             <div>Главная</div>
         </div>
-        <div class="nav-item" onclick="switchTab('tasks-tab')">
-            <div class="nav-icon"><i class="fas fa-tasks"></i></div>
-            <div>Задания</div>
-        </div>
         <div class="nav-item" onclick="switchTab('inventory-tab')">
             <div class="nav-icon"><i class="fas fa-box-open"></i></div>
             <div>Инвентарь</div>
@@ -1634,15 +1613,14 @@
         let user = {
             id: tg.initDataUnsafe?.user?.id || Math.floor(Math.random() * 1000000),
             username: tg.initDataUnsafe?.user?.username || 'user' + Math.floor(Math.random() * 10000),
+            firstName: tg.initDataUnsafe?.user?.first_name || 'User',
+            lastName: tg.initDataUnsafe?.user?.last_name || '',
+            photoUrl: tg.initDataUnsafe?.user?.photo_url || null,
             points: 0,
-            stars: 1000,
-            lisa: 0,
+            stars: 0,
             totalPoints: 0,
             inventory: [],
             history: [],
-            upgrades: {
-                speed: 1
-            },
             referralCount: 0,
             referralEarned: 0,
             referralAvailable: 0,
@@ -1816,27 +1794,8 @@
             }
         ];
 
-        // Задания
-        const dailyTasks = [
-            { id: 1, title: "Ежедневный бонус", description: "Получите ежедневную награду", reward: 100, type: "daily", maxProgress: 1 },
-            { id: 2, title: "Сыграть в рулетку", description: "Сыграйте 3 раза в рулетку", reward: 150, type: "daily", maxProgress: 3 },
-            { id: 3, title: "Пригласить друга", description: "Пригласите 1 друга", reward: 200, type: "daily", maxProgress: 1 }
-        ];
         
-        const quests = [
-            { id: 101, title: "Новичок рулетки", description: "Сыграйте 10 раз в рулетку", reward: 500, type: "quest", maxProgress: 10 },
-            { id: 102, title: "Коллекционер", description: "Соберите 5 NFT подарков", reward: 1000, type: "quest", maxProgress: 5 },
-            { id: 103, title: "Мастер рулетки", description: "Сыграйте 50 раз в рулетку", reward: 2500, type: "quest", maxProgress: 50 },
-            { id: 104, title: "Великий коллекционер", description: "Соберите 20 NFT подарков", reward: 5000, type: "quest", maxProgress: 20 }
-        ];
         
-        // Магазин прокачек
-        const shopItems = [
-            { id: 1, title: "Ускорение x2", description: "Увеличивает скорость получения LISA в 2 раза", price: 1000, type: "speed", multiplier: 2 },
-            { id: 2, title: "Ускорение x3", description: "Увеличивает скорость получения LISA в 3 раза", price: 2500, type: "speed", multiplier: 3 },
-            { id: 3, title: "Ускорение x5", description: "Увеличивает скорость получения LISA в 5 раза", price: 5000, type: "speed", multiplier: 5 },
-            { id: 4, title: "Ускорение x10", description: "Увеличивает скорость получения LISA в 10 раза", price: 10000, type: "speed", multiplier: 10 }
-        ];
 
         // Переменные для рулетки
         let selectedChance = 1;
@@ -1861,11 +1820,9 @@
                 const parsed = JSON.parse(savedUser);
                 user.points = parsed.points || 0;
                 user.stars = parsed.stars || 1000;
-                user.lisa = parsed.lisa || 0;
                 user.totalPoints = parsed.totalPoints || 0;
                 user.inventory = parsed.inventory || [];
                 user.history = parsed.history || [];
-                user.upgrades = parsed.upgrades || { speed: 1 };
                 user.referralCount = parsed.referralCount || 0;
                 user.referralEarned = parsed.referralEarned || 0;
                 user.referralAvailable = parsed.referralAvailable || 0;
@@ -1873,9 +1830,19 @@
                 user.tasks = parsed.tasks || {};
                 user.lastFreeSpin = parsed.lastFreeSpin || 0;
                 user.lastDailyBonus = parsed.lastDailyBonus || 0;
+                
+                // Сохраняем данные из Telegram, если они есть
+                if (tg.initDataUnsafe?.user) {
+                    user.photoUrl = tg.initDataUnsafe.user.photo_url || parsed.photoUrl;
+                    user.firstName = tg.initDataUnsafe.user.first_name || parsed.firstName;
+                    user.lastName = tg.initDataUnsafe.user.last_name || parsed.lastName;
+                } else {
+                    user.photoUrl = parsed.photoUrl;
+                    user.firstName = parsed.firstName;
+                    user.lastName = parsed.lastName;
+                }
             }
             updateUI();
-            updateTasks();
             updateShop();
         }
         
@@ -1890,38 +1857,31 @@
             initRoulettes();
             initCases();
             updateCountdown();
-            
+
             // Обновляем счетчик каждую секунду
             setInterval(updateCountdown, 1000);
             
-            // Автоматическое получение LISA
-            setInterval(autoCollectLisa, 1000);
 
             // Запуск краш игры каждые 10 секунд
             setInterval(startCrashGame, 10000);
         });
         
-        // Функция автоматического сбора LISA
-        function autoCollectLisa() {
-            const lisaToAdd = 1 * user.upgrades.speed;
-            user.lisa += lisaToAdd;
-            user.totalPoints += lisaToAdd;
-            updateUI();
-            saveUserData();
-        }
+        
         
         // Обновление интерфейса
         function updateUI() {
             document.getElementById('points').textContent = user.stars.toLocaleString();
             document.getElementById('total-points').textContent = user.totalPoints.toLocaleString();
-            document.getElementById('lisa-value').textContent = user.lisa.toLocaleString();
             document.getElementById('stars').textContent = user.stars.toLocaleString();
-            document.getElementById('profile-name').textContent = user.username;
+            document.getElementById('profile-name').textContent = user.firstName || user.username;
             document.getElementById('profile-balance').textContent = user.stars.toLocaleString();
             document.getElementById('referral-count').textContent = user.referralCount;
             document.getElementById('referral-earned').textContent = '⭐ ' + user.referralEarned.toLocaleString();
             document.getElementById('referral-available').textContent = '⭐ ' + user.referralAvailable.toLocaleString();
             document.getElementById('referral-locked').textContent = '⭐ ' + user.referralLocked.toLocaleString();
+            
+            // Устанавливаем аватарку
+            setupProfileAvatar();
             
             updateInventory();
         }
@@ -2168,7 +2128,6 @@
                         addToInventory(prize);
                         showWinModal(prize);
                         addLiveWin(prize);
-                        updateTasksProgress('roulette', 1);
                         saveUserData();
                     }, 500);
                 }
@@ -2521,8 +2480,7 @@
                 saveUserData();
                 showNotification('NFT продан за ' + nft.value + ' Stars!');
                 
-                // Обновляем прогресс заданий
-                updateTasksProgress('sell', 1);
+                
                 addHistoryEntry('sell', `Продажа NFT: ${nft.name}`, nft.value);
             }
             
@@ -2582,249 +2540,8 @@
                 container.removeChild(container.lastChild);
             }
         }
+        
 
-        // Обновление заданий
-        function updateTasks() {
-            updateDailyTasks();
-            updateQuests();
-        }
-        
-        // Обновление ежедневных заданий
-        function updateDailyTasks() {
-            const container = document.getElementById('daily-tasks-container');
-            container.innerHTML = '';
-            
-            dailyTasks.forEach(task => {
-                const progress = user.tasks[task.id] || 0;
-                const completed = progress >= task.maxProgress;
-                
-                const div = document.createElement('div');
-                div.className = 'task-item';
-                
-                const title = document.createElement('div');
-                title.className = 'task-title';
-                title.textContent = task.title;
-                
-                const desc = document.createElement('div');
-                desc.className = 'task-reward';
-                desc.textContent = `+${task.reward} очков`;
-                
-                const progressBar = document.createElement('div');
-                progressBar.className = 'task-progress';
-                
-                const progressBarInner = document.createElement('div');
-                progressBarInner.className = 'task-progress-bar';
-                progressBarInner.style.width = `${(progress / task.maxProgress) * 100}%`;
-                
-                progressBar.appendChild(progressBarInner);
-                
-                const progressInfo = document.createElement('div');
-                progressInfo.className = 'task-progress-info';
-                progressInfo.textContent = `${progress}/${task.maxProgress}`;
-                
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.textContent = completed ? 'ВЫПОЛНЕНО' : 'ВЫПОЛНИТЬ';
-                
-                if (completed) {
-                    btn.disabled = true;
-                    btn.style.background = '#636e72';
-                } else {
-                    btn.onclick = () => completeTask(task);
-                }
-                
-                div.appendChild(title);
-                div.appendChild(desc);
-                div.appendChild(progressBar);
-                div.appendChild(progressInfo);
-                div.appendChild(btn);
-                
-                container.appendChild(div);
-            });
-        }
-        
-        // Обновление квестов
-        function updateQuests() {
-            const container = document.getElementById('quests-container');
-            container.innerHTML = '';
-            
-            quests.forEach(task => {
-                const progress = user.tasks[task.id] || 0;
-                const completed = progress >= task.maxProgress;
-                
-                const div = document.createElement('div');
-                div.className = 'task-item';
-                
-                const title = document.createElement('div');
-                title.className = 'task-title';
-                title.textContent = task.title;
-                
-                const desc = document.createElement('div');
-                desc.className = 'task-reward';
-                desc.textContent = `+${task.reward} Stars`;
-                
-                const progressBar = document.createElement('div');
-                progressBar.className = 'task-progress';
-                
-                const progressBarInner = document.createElement('div');
-                progressBarInner.className = 'task-progress-bar';
-                progressBarInner.style.width = `${(progress / task.maxProgress) * 100}%`;
-                
-                progressBar.appendChild(progressBarInner);
-                
-                const progressInfo = document.createElement('div');
-                progressInfo.className = 'task-progress-info';
-                progressInfo.textContent = `${progress}/${task.maxProgress}`;
-                
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.textContent = completed ? 'ЗАБРАТЬ НАГРАДУ' : 'ВЫПОЛНЯЕТСЯ';
-                
-                if (completed) {
-                    btn.onclick = () => completeTask(task);
-                } else {
-                    btn.disabled = true;
-                }
-                
-                div.appendChild(title);
-                div.appendChild(desc);
-                div.appendChild(progressBar);
-                div.appendChild(progressInfo);
-                div.appendChild(btn);
-                
-                container.appendChild(div);
-            });
-        }
-        
-        // Выполнение задания
-        function completeTask(task) {
-            if (task.type === 'daily') {
-                user.points += task.reward;
-                user.totalPoints += task.reward;
-                showNotification(`Получено ${task.reward} очков!`);
-                addHistoryEntry('task', `Задание: ${task.title}`, task.reward);
-            } else if (task.type === 'quest') {
-                user.stars += task.reward;
-                showNotification(`Получено ${task.reward} Stars!`);
-                addHistoryEntry('task', `Квест: ${task.title}`, task.reward);
-            }
-            
-            // Отмечаем задание как выполненное
-            user.tasks[task.id] = task.maxProgress;
-            
-            updateUI();
-            updateTasks();
-            saveUserData();
-        }
-        
-        // Обновление прогресса заданий
-        function updateTasksProgress(type, amount) {
-            let updated = false;
-            
-            // Обновляем ежедневные задания
-            dailyTasks.forEach(task => {
-                if ((type === 'roulette' && task.title.includes('рулетку')) ||
-                    (type === 'invite' && task.title.includes('друга')) ||
-                    (type === 'sell' && task.title.includes('NFT'))) {
-                    
-                    const currentProgress = user.tasks[task.id] || 0;
-                    if (currentProgress < task.maxProgress) {
-                        user.tasks[task.id] = Math.min(currentProgress + amount, task.maxProgress);
-                        updated = true;
-                    }
-                }
-            });
-            
-            // Обновляем квесты
-            quests.forEach(task => {
-                if ((type === 'roulette' && task.title.includes('рулетку')) ||
-                    (type === 'collect' && task.title.includes('коллекционер'))) {
-                    
-                    const currentProgress = user.tasks[task.id] || 0;
-                    if (currentProgress < task.maxProgress) {
-                        user.tasks[task.id] = Math.min(currentProgress + amount, task.maxProgress);
-                        updated = true;
-                    }
-                }
-            });
-            
-            if (updated) {
-                updateTasks();
-                saveUserData();
-            }
-        }
-
-        // Обновление магазина
-        function updateShop() {
-            const container = document.getElementById('shop-items-container');
-            container.innerHTML = '';
-            
-            shopItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'shop-item';
-                
-                const icon = document.createElement('div');
-                icon.style.fontSize = '24px';
-                icon.style.color = 'var(--primary)';
-                icon.innerHTML = '<i class="fas fa-bolt"></i>';
-                
-                const info = document.createElement('div');
-                info.className = 'shop-item-info';
-                
-                const title = document.createElement('div');
-                title.className = 'shop-item-title';
-                title.textContent = item.title;
-                
-                const desc = document.createElement('div');
-                desc.className = 'shop-item-desc';
-                desc.textContent = item.description;
-                
-                const price = document.createElement('div');
-                price.className = 'shop-item-price';
-                price.textContent = '⭐ ' + item.price.toLocaleString();
-                
-                info.appendChild(title);
-                info.appendChild(desc);
-                info.appendChild(price);
-                
-                const btn = document.createElement('button');
-                btn.className = 'btn btn-small';
-                
-                // Проверяем, куплено ли уже улучшение
-                if (user.upgrades[item.type] >= item.multiplier) {
-                    btn.textContent = 'КУПЛЕНО';
-                    btn.disabled = true;
-                    btn.style.background = '#636e72';
-                } else {
-                    btn.textContent = 'КУПИТЬ';
-                    btn.onclick = () => buyUpgrade(item);
-                }
-                
-                div.appendChild(icon);
-                div.appendChild(info);
-                div.appendChild(btn);
-                
-                container.appendChild(div);
-            });
-        }
-        
-        // Покупка улучшения
-        function buyUpgrade(item) {
-            if (user.stars < item.price) {
-                showNotification('Недостаточно Stars!');
-                return;
-            }
-            
-            user.stars -= item.price;
-            user.upgrades[item.type] = item.multiplier;
-            
-            updateUI();
-            updateShop();
-            saveUserData();
-            
-            showNotification(`Улучшение "${item.title}" куплено!`);
-            addHistoryEntry('purchase', `Покупка: ${item.title}`, -item.price);
-        }
 
         // Обновление счетчика обратного отсчета
         function updateCountdown() {
@@ -2839,15 +2556,38 @@
             } else {
                 document.getElementById('countdown').textContent = formatTime(timeUntilNextSpin);
                 document.getElementById('free-spin-btn').disabled = true;
+                document.getElementById('free-spin-btn').textContent = 'КРУТИТЬ БЕСПЛАТНО';
             }
         }
 
         // Вспомогательные функции
         function loadLottieAnimation(containerId, animationUrl) {
             const container = document.getElementById(containerId);
-            if (!container) return;
+            if (!container || !animationUrl) return;
             
-            container.innerHTML = '<div style="font-size: 40px;">🎁</div>';
+            // Очищаем контейнер
+            container.innerHTML = '';
+            
+            try {
+                // Создаем элемент для анимации
+                const animationElement = document.createElement('div');
+                animationElement.style.width = '100%';
+                animationElement.style.height = '100%';
+                container.appendChild(animationElement);
+                
+                // Загружаем Lottie анимацию
+                lottie.loadAnimation({
+                    container: animationElement,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: animationUrl
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки Lottie анимации:', error);
+                // Фолбэк на статичное изображение или эмодзи
+                container.innerHTML = '<div style="font-size: 40px; display: flex; align-items: center; justify-content: center; height: 100%;">🎁</div>';
+            }
         }
 
         function showNotification(message) {
@@ -3048,6 +2788,34 @@
                 
                 // Закрываем модальное окно
                 closeModal();
+            }
+        }
+
+        function setupProfileAvatar() {
+            const avatarContainer = document.getElementById('profile-avatar');
+            const defaultIcon = document.getElementById('default-avatar-icon');
+            
+            if (user.photoUrl) {
+                // Создаем элемент изображения
+                const img = document.createElement('img');
+                img.src = user.photoUrl;
+                img.alt = `${user.firstName} ${user.lastName}`;
+                img.onload = function() {
+                    // Успешно загрузилось
+                    avatarContainer.classList.add('has-image');
+                    defaultIcon.style.display = 'none';
+                };
+                img.onerror = function() {
+                    // Если изображение не загрузилось, показываем дефолтную иконку
+                    avatarContainer.classList.remove('has-image');
+                    defaultIcon.style.display = 'flex';
+                };
+                
+                avatarContainer.appendChild(img);
+            } else {
+                // Нет аватарки в Telegram
+                avatarContainer.classList.remove('has-image');
+                defaultIcon.style.display = 'flex';
             }
         }
 
