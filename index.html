@@ -1848,16 +1848,52 @@
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             loadUserData();
-            loadLiveWins(); // Добавь эту строку
+            loadLiveWins();
             initRoulettes();
             initCases();
             updateCountdown();
+            setupTelegramAvatar(); // ДОБАВЬТЕ ЭТУ СТРОКУ
             
             setInterval(updateCountdown, 1000);
             setInterval(startCrashGame, 10000);
         });
-        
-        
+
+        // Функция настройки аватара Telegram
+        function setupTelegramAvatar() {
+            const avatarContainer = document.getElementById('profile-avatar');
+            if (!avatarContainer) return;
+            
+            // Очищаем контейнер
+            avatarContainer.innerHTML = '';
+            
+            // Проверяем есть ли аватар в Telegram
+            if (tg.initDataUnsafe?.user?.photo_url) {
+                // Добавляем класс для изображения
+                avatarContainer.classList.add('has-image');
+                
+                // Создаем изображение
+                const img = document.createElement('img');
+                img.src = tg.initDataUnsafe.user.photo_url;
+                img.alt = tg.initDataUnsafe.user.first_name || 'User';
+                
+                avatarContainer.appendChild(img);
+                
+                // Также обновляем имя пользователя
+                const profileName = document.getElementById('profile-name');
+                if (profileName && tg.initDataUnsafe.user.first_name) {
+                    profileName.textContent = tg.initDataUnsafe.user.first_name;
+                    user.username = tg.initDataUnsafe.user.first_name;
+                    user.firstName = tg.initDataUnsafe.user.first_name;
+                }
+            } else {
+                // Дефолтная иконка
+                avatarContainer.classList.remove('has-image');
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-user';
+                icon.id = 'default-avatar-icon';
+                avatarContainer.appendChild(icon);
+            }
+        }
         
         // Обновление интерфейса
         function updateUI() {
@@ -2628,10 +2664,10 @@
         }
 
         function closeModal() {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.style.display = 'none';
-            });
-        }
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.style.display = 'none';
+        });
+    }
 
         function formatTime(ms) {
             const hours = Math.floor(ms / (1000 * 60 * 60));
